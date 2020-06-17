@@ -93,8 +93,10 @@ namespace LightControl
                     }
                     else {
                         MessageBox.Show("登录成功");
-                        isee i = new isee();
-                        i.getIseeData();
+                        Frm_Main frmMain = new Frm_Main();                  //创建主窗体对象
+                        frmMain.StartPosition = FormStartPosition.CenterScreen;
+                        frmMain.Show();                                     //显示主窗体
+                        this.Visible = false;
                     }
                 }
                 else
