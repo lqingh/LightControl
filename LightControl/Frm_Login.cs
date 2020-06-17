@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Data;
-
 using System.Windows.Forms;
 using System.Data.SqlClient;
 
@@ -13,7 +12,7 @@ namespace LightControl
             InitializeComponent();
         }
 
-        DBConn.DB_SQL TEST_DB = new DBConn.DB_SQL();
+        DBConn.DB_SQL TEST_DB = com.TEST_DB;
 
         private bool ValidateInput()
         {
@@ -79,18 +78,14 @@ namespace LightControl
             if (ValidateInput())
             {
                 string strMsg = string.Empty;
-                DataTable dt = new DataTable();
-                //var user = com.user;
+                DataTable dt = new DataTable();  
                 string passWord = txtPwd.Text.Trim();
                 string userName = txtID.Text.Trim();
-                //MessageBox.Show("ds");
                 if (TEST_DB.DBConnect(ref strMsg))
                 {
                     string strSql = "select * from user where name = @userName and password = @passWord";
                     TEST_DB.Add_Param("@userName", userName);
-                    TEST_DB.Add_Param("@passWord", passWord);
-                    
-                 //   MessageBox.Show(strSql);
+                    TEST_DB.Add_Param("@passWord", passWord); 
                     TEST_DB.ExecuteSQL(strSql, dt);
                     if (dt.Rows.Count == 0)
                     {
@@ -98,6 +93,8 @@ namespace LightControl
                     }
                     else {
                         MessageBox.Show("登录成功");
+                        isee i = new isee();
+                        i.getIseeData();
                     }
                 }
                 else
