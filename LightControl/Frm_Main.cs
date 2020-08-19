@@ -98,5 +98,12 @@ namespace LightControl
                 }
             }
         }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            Frm_Addloop_Manual am = new Frm_Addloop_Manual();
+            am.StartPosition = FormStartPosition.CenterParent;
+            am.ShowDialog();
+        }
     }
 }
