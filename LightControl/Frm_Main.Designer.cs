@@ -68,6 +68,7 @@
             this.Column5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.button1 = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.panel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -207,7 +208,7 @@
             this.panel2.ForeColor = System.Drawing.Color.Black;
             this.panel2.Location = new System.Drawing.Point(0, 0);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(872, 572);
+            this.panel2.Size = new System.Drawing.Size(1166, 572);
             this.panel2.TabIndex = 4;
             // 
             // panel4
@@ -215,7 +216,7 @@
             this.panel4.Controls.Add(this.tabControl11);
             this.panel4.Location = new System.Drawing.Point(160, 3);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(709, 569);
+            this.panel4.Size = new System.Drawing.Size(890, 569);
             this.panel4.TabIndex = 12;
             // 
             // tabControl11
@@ -225,7 +226,7 @@
             this.tabControl11.Location = new System.Drawing.Point(3, 3);
             this.tabControl11.Name = "tabControl11";
             this.tabControl11.SelectedIndex = 0;
-            this.tabControl11.Size = new System.Drawing.Size(709, 566);
+            this.tabControl11.Size = new System.Drawing.Size(887, 566);
             this.tabControl11.TabIndex = 11;
             this.tabControl11.Visible = false;
             // 
@@ -239,12 +240,13 @@
             this.tabPage28.Location = new System.Drawing.Point(4, 25);
             this.tabPage28.Name = "tabPage28";
             this.tabPage28.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage28.Size = new System.Drawing.Size(701, 537);
+            this.tabPage28.Size = new System.Drawing.Size(879, 537);
             this.tabPage28.TabIndex = 0;
             this.tabPage28.Text = "回路设置";
             // 
             // panel9
             // 
+            this.panel9.Controls.Add(this.button1);
             this.panel9.Controls.Add(this.button5);
             this.panel9.Controls.Add(this.comboBox2);
             this.panel9.Controls.Add(this.textBox1);
@@ -252,7 +254,7 @@
             this.panel9.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.panel9.Location = new System.Drawing.Point(3, 492);
             this.panel9.Name = "panel9";
-            this.panel9.Size = new System.Drawing.Size(695, 42);
+            this.panel9.Size = new System.Drawing.Size(873, 42);
             this.panel9.TabIndex = 18;
             // 
             // button5
@@ -264,6 +266,7 @@
             this.button5.TabIndex = 16;
             this.button5.Text = "添加回路";
             this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click_1);
             // 
             // comboBox2
             // 
@@ -313,7 +316,7 @@
             this.bindingNavigator1.Name = "bindingNavigator1";
             this.bindingNavigator1.Padding = new System.Windows.Forms.Padding(0, 0, 1, 20);
             this.bindingNavigator1.PositionItem = null;
-            this.bindingNavigator1.Size = new System.Drawing.Size(695, 30);
+            this.bindingNavigator1.Size = new System.Drawing.Size(873, 30);
             this.bindingNavigator1.TabIndex = 20;
             this.bindingNavigator1.Text = "bindingNavigator1";
             // 
@@ -443,7 +446,7 @@
             this.dataGridView1.RowHeadersWidth = 60;
             this.dataGridView1.RowTemplate.Height = 23;
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView1.Size = new System.Drawing.Size(695, 531);
+            this.dataGridView1.Size = new System.Drawing.Size(873, 531);
             this.dataGridView1.TabIndex = 0;
             // 
             // Column7
@@ -489,11 +492,21 @@
             this.Column6.Name = "Column6";
             this.Column6.ReadOnly = true;
             // 
+            // button1
+            // 
+            this.button1.Font = new System.Drawing.Font("等线", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.button1.Location = new System.Drawing.Point(672, 10);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(101, 26);
+            this.button1.TabIndex = 21;
+            this.button1.Text = "导入回路";
+            this.button1.UseVisualStyleBackColor = true;
+            // 
             // Frm_Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(872, 572);
+            this.ClientSize = new System.Drawing.Size(1166, 572);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.panel2);
             this.Name = "Frm_Main";
@@ -552,5 +565,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Column5;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column6;
+        private System.Windows.Forms.Button button1;
     }
 }

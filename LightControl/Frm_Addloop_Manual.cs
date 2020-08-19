@@ -12,6 +12,9 @@ namespace LightControl
 {
     public partial class Frm_Addloop_Manual : Form
     {
+        string tagName = "";        // 标签名
+        string remarksText = "";    // 备注信息
+
         public Frm_Addloop_Manual()
         {
             InitializeComponent();
@@ -34,6 +37,10 @@ namespace LightControl
                 MessageBox.Show("备注不能为空");
                 return;
             }
+
+            tagName = textBox1.Text;
+            remarksText = textBox2.Text;
         }
+
     }
 }
