@@ -38,14 +38,19 @@ namespace LightControl
             TEST_DB.Add_Param("@curPage", TootalPageNum  * onePageRowNum);
             TEST_DB.Add_Param("@pageSize", onePageRowNum);
             TEST_DB.ExecuteSQL(strSql, dt);
-            MessageBox.Show(Convert.ToString(dt.Rows.Count));
+           // MessageBox.Show(Convert.ToString(dt.Rows.Count));
             tabControl11.Visible = true;
             tabControl11.Dock = DockStyle.Fill;
             dataGridView1.Rows.Clear();
             for (i=0;i< dt.Rows.Count;i++) {
                 dataGridView1.Rows.Add(dt.Rows[i][0], TootalPageNum  * onePageRowNum+i+1, dt.Rows[i][1], dt.Rows[i][2], dt.Rows[i][3]);
-
             }
+            strSql = "select count(*) from tags";
+            dt.Dispose();
+            dt = new DataTable();
+            TEST_DB.ExecuteSQL(strSql, dt);
+            MessageBox.Show(Convert.ToString(dt.Rows[0][0]));
+            dt.Dispose();
             // dataGridView1.DataSource = dt;
             //  MessageBox.Show(Convert.ToString( dt.Rows.Count));
         }
