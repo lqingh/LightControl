@@ -92,6 +92,7 @@ namespace LightControl
                         MessageBox.Show("用户名或密码不正确");
                     }
                     else {
+                        com.TEST_DB = TEST_DB;
                         MessageBox.Show("登录成功");
                         Frm_Main frmMain = new Frm_Main();                  //创建主窗体对象
                         frmMain.user = userName;
