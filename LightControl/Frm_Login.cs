@@ -65,7 +65,7 @@ namespace LightControl
 
         private void Frm_Login_Load(object sender, EventArgs e)
         {
-            TEST_DB.fDBServerIP = "192.168.1.12";
+            TEST_DB.fDBServerIP = "192.168.0.102";
 
             TEST_DB.fDBAccount = "root";
 
