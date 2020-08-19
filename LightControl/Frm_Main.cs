@@ -13,12 +13,12 @@ namespace LightControl
     public partial class Frm_Main : Form
     {
 
-        int UserTootalPageNum = 0;  // 用来记录在"用户"中当前所在的页码数
+        int TootalPageNum = 0;  // 用来记录在"用户"中当前所在的页码数
         int onePageRowNum = 26;     // 设置一页显示的行数
         int ZongShu_Num = 0;        // 用来记录总的用户数
         int Message_num = 0;        // 用来记录当前的分类中消息条数
         int UserMessagePageNum = 0; // 用来记录在"任务"中当前所在的页码数
-
+        DBConn.DB_SQL TEST_DB = com.TEST_DB;
         public Frm_Main()
         {
             InitializeComponent();
@@ -29,43 +29,59 @@ namespace LightControl
             name.Text = user;
         }
 
+        string strSql = "select * from tags limit @curPage,@pageSize";
+      
+        int i = 0;
         private void region_Click(object sender, EventArgs e)
         {
+            DataTable dt = new DataTable();
+            TEST_DB.Add_Param("@curPage", TootalPageNum  * onePageRowNum);
+            TEST_DB.Add_Param("@pageSize", onePageRowNum);
+            TEST_DB.ExecuteSQL(strSql, dt);
+            MessageBox.Show(Convert.ToString(dt.Rows.Count));
             tabControl11.Visible = true;
+            tabControl11.Dock = DockStyle.Fill;
+            dataGridView1.Rows.Clear();
+            for (i=0;i< dt.Rows.Count;i++) {
+                dataGridView1.Rows.Add(dt.Rows[i][0], TootalPageNum  * onePageRowNum+i+1, dt.Rows[i][1], dt.Rows[i][2], dt.Rows[i][3]);
+
+            }
+            // dataGridView1.DataSource = dt;
+            //  MessageBox.Show(Convert.ToString( dt.Rows.Count));
         }
 
         // 首页
         private void toolStripButton1_Click(object sender, EventArgs e)
         {
-            UserTootalPageNum = 0;
-            toolStripTextBox1.Text = (UserTootalPageNum + 1).ToString();
+            TootalPageNum = 0;
+            toolStripTextBox1.Text = (TootalPageNum + 1).ToString();
         }
 
         // 尾页
         private void toolStripButton20_Click(object sender, EventArgs e)
         {
-            UserTootalPageNum = (ZongShu_Num % onePageRowNum == 0) ? (ZongShu_Num / onePageRowNum) - 1 : (ZongShu_Num / onePageRowNum);
-            toolStripTextBox1.Text = (UserTootalPageNum + 1).ToString();
+            TootalPageNum = (ZongShu_Num % onePageRowNum == 0) ? (ZongShu_Num / onePageRowNum) - 1 : (ZongShu_Num / onePageRowNum);
+            toolStripTextBox1.Text = (TootalPageNum + 1).ToString();
         }
 
         // 上一页
         private void toolStripButton18_Click(object sender, EventArgs e)
         {
-            if (UserTootalPageNum > 0)
+            if (TootalPageNum > 0)
             {
-                UserTootalPageNum--;
+                TootalPageNum--;
             }
-            toolStripTextBox1.Text = (UserTootalPageNum + 1).ToString();
+            toolStripTextBox1.Text = (TootalPageNum + 1).ToString();
         }
 
         // 下一页
         private void toolStripButton19_Click(object sender, EventArgs e)
         {
-            if (UserTootalPageNum < ((ZongShu_Num % onePageRowNum == 0) ? (ZongShu_Num / onePageRowNum) - 1 : (ZongShu_Num / onePageRowNum)))
+            if (TootalPageNum < ((ZongShu_Num % onePageRowNum == 0) ? (ZongShu_Num / onePageRowNum) - 1 : (ZongShu_Num / onePageRowNum)))
             {
-                UserTootalPageNum++;
+               TootalPageNum++;
             }
-            toolStripTextBox1.Text = (UserTootalPageNum + 1).ToString();
+            toolStripTextBox1.Text = (TootalPageNum + 1).ToString();
         }
 
         private void toolStripTextBox1_TextChanged(object sender, EventArgs e)
@@ -74,7 +90,7 @@ namespace LightControl
             {
                 if (Convert.ToInt32(toolStripTextBox1.Text.ToString()) > 0 && Convert.ToInt32(toolStripTextBox1.Text.ToString()) <= ((ZongShu_Num % onePageRowNum) == 0 ? (ZongShu_Num / onePageRowNum) : (ZongShu_Num / onePageRowNum)) + 1)
                 {
-                    UserTootalPageNum = Convert.ToInt32(toolStripTextBox1.Text.ToString()) - 1;
+                    TootalPageNum = Convert.ToInt32(toolStripTextBox1.Text.ToString()) - 1;
                     dataGridView1.Rows.Clear();
                    /* string ss1 = com.HttpGet(com.URL + "User/getData?userName=" + userName + "&departmentName=" + departmentName + "&pageSize=" + onePageRowNum + "&pageNumber=" + (UserTootalPageNum));
                     JObject jo1 = (JObject)JsonConvert.DeserializeObject(ss1);
