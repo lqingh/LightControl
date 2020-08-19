@@ -16,10 +16,10 @@ namespace LightControl
         {
             InitializeComponent();
         }
-
+       public  string user = "";
         private void Frm_Main_Load(object sender, EventArgs e)
         {
-
+            name.Text = user;
         }
     }
 }

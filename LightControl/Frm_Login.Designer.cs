@@ -43,7 +43,7 @@
             this.txtID.Name = "txtID";
             this.txtID.Size = new System.Drawing.Size(129, 19);
             this.txtID.TabIndex = 0;
-            this.txtID.Text = "3";
+            this.txtID.Text = "admin";
             this.txtID.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             this.txtID.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtID_KeyPress);
             // 
@@ -55,7 +55,7 @@
             this.txtPwd.Name = "txtPwd";
             this.txtPwd.Size = new System.Drawing.Size(129, 19);
             this.txtPwd.TabIndex = 1;
-            this.txtPwd.Text = "3";
+            this.txtPwd.Text = "admin";
             // 
             // button1
             // 

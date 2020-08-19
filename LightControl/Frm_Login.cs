@@ -94,6 +94,7 @@ namespace LightControl
                     else {
                         MessageBox.Show("登录成功");
                         Frm_Main frmMain = new Frm_Main();                  //创建主窗体对象
+                        frmMain.user = userName;
                         frmMain.StartPosition = FormStartPosition.CenterScreen;
                         frmMain.Show();                                     //显示主窗体
                         this.Visible = false;
