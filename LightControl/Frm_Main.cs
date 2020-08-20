@@ -29,7 +29,7 @@ namespace LightControl
             name.Text = user;
         }
 
-        string strSql = "select * from tags limit @curPage,@pageSize";
+        string strSql = "select t.id,t.name,t.note,e.`name` as eName from tags t left join equipment e on t.equipment_id = e.id limit @curPage,@pageSize";
       
         int i = 0;
         private void region_Click(object sender, EventArgs e)
@@ -38,8 +38,10 @@ namespace LightControl
             TEST_DB.Add_Param("@curPage", TootalPageNum  * onePageRowNum);
             TEST_DB.Add_Param("@pageSize", onePageRowNum);
             TEST_DB.ExecuteSQL(strSql, dt);
-           // MessageBox.Show(Convert.ToString(dt.Rows.Count));
+            MessageBox.Show(Convert.ToString(dt.Rows.Count));
+            manage();
             tabControl11.Visible = true;
+            
             tabControl11.Dock = DockStyle.Fill;
             dataGridView1.Rows.Clear();
             for (i=0;i< dt.Rows.Count;i++) {
@@ -116,6 +118,53 @@ namespace LightControl
                             dataGridView8.Rows[index - 1].DefaultCellStyle.BackColor = Color.FromArgb(233, 237, 246);
                         }
                     }*/
+                }
+            }
+        }
+        private void manage() {
+            tabControl11.Visible = false;
+            panel5.Visible = false;
+        }
+        private void module_Click(object sender, EventArgs e)
+        {
+            manage();
+            panel5.Visible = true;
+           
+            panel5.Dock = DockStyle.Fill;
+        }
+
+        private void 添加子节点ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Frm_AddEquipment f5 = new Frm_AddEquipment();
+            if (f5.ShowDialog() == DialogResult.OK)
+            {
+             //  treeView1.SelectedNode.Nodes.Add(f5.nodeName);
+            }
+        }
+
+        private void 删除子节点ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            treeView1.SelectedNode.Remove();
+        }
+
+        private void treeView1_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                Point ClickPoint = new Point(e.X, e.Y);
+                int x = e.X;
+                int y = e.Y;
+                TreeNode CurrentNode = treeView1.GetNodeAt(ClickPoint);
+                if (CurrentNode is TreeNode)//判断你点的是不是一个节点
+                {
+                    treeView1.SelectedNode = CurrentNode;
+                    CurrentNode.ContextMenuStrip = this.contextMenuStrip1;
+                    contextMenuStrip1.Show(MousePosition);
+                }
+                else
+                {
+                    treeView1.ContextMenuStrip = this.contextMenuStrip2;
+                    contextMenuStrip2.Show(MousePosition);
                 }
             }
         }
