@@ -47,6 +47,7 @@
             this.tabControl11 = new System.Windows.Forms.TabControl();
             this.tabPage28 = new System.Windows.Forms.TabPage();
             this.panel9 = new System.Windows.Forms.Panel();
+            this.button1 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
             this.comboBox2 = new System.Windows.Forms.ComboBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
@@ -68,7 +69,6 @@
             this.Column5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.button1 = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.panel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -257,6 +257,16 @@
             this.panel9.Size = new System.Drawing.Size(873, 42);
             this.panel9.TabIndex = 18;
             // 
+            // button1
+            // 
+            this.button1.Font = new System.Drawing.Font("等线", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.button1.Location = new System.Drawing.Point(672, 10);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(101, 26);
+            this.button1.TabIndex = 21;
+            this.button1.Text = "导入回路";
+            this.button1.UseVisualStyleBackColor = true;
+            // 
             // button5
             // 
             this.button5.Font = new System.Drawing.Font("等线", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
@@ -266,7 +276,6 @@
             this.button5.TabIndex = 16;
             this.button5.Text = "添加回路";
             this.button5.UseVisualStyleBackColor = true;
-            this.button5.Click += new System.EventHandler(this.button5_Click_1);
             // 
             // comboBox2
             // 
@@ -351,7 +360,7 @@
             this.toolStripTextBox1.AutoSize = false;
             this.toolStripTextBox1.Name = "toolStripTextBox1";
             this.toolStripTextBox1.Size = new System.Drawing.Size(50, 23);
-            this.toolStripTextBox1.Text = "0";
+            this.toolStripTextBox1.Text = "1";
             this.toolStripTextBox1.ToolTipText = "当前位置";
             this.toolStripTextBox1.TextChanged += new System.EventHandler(this.toolStripTextBox1_TextChanged);
             // 
@@ -491,16 +500,6 @@
             this.Column6.HeaderText = "操作";
             this.Column6.Name = "Column6";
             this.Column6.ReadOnly = true;
-            // 
-            // button1
-            // 
-            this.button1.Font = new System.Drawing.Font("等线", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.button1.Location = new System.Drawing.Point(672, 10);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(101, 26);
-            this.button1.TabIndex = 21;
-            this.button1.Text = "导入回路";
-            this.button1.UseVisualStyleBackColor = true;
             // 
             // Frm_Main
             // 
