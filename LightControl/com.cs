@@ -10,4 +10,9 @@ namespace LightControl
     {
        public static DBConn.DB_SQL  TEST_DB = new DBConn.DB_SQL();
     }
+    public class listItem
+    {
+        public int ID { get; set; }
+        public string Name { get; set; }
+    }
 }

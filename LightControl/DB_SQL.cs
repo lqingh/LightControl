@@ -76,7 +76,7 @@ namespace DBConn
             {
                 fconConnection = new MySqlConnection(
                   //    string.Format("server = {0}; User ID={1};Password={2};Initial Catalog={3};Connect Timeout=10",
-                  string.Format("server = {0}; user={1};Password={2};database={3};Connect Timeout=10",
+                  string.Format("server = {0}; user={1};Password={2};database={3};Connect Timeout=10;charset=utf8",
                      this.fDBServerIP, this.fDBAccount, this.fDBPasswd, this.fDBServiceName));//Data Source是数据库地址和端口号，地址和端口号使用,分隔,Initial Catalog是数据库的名字
             }
             else
@@ -171,7 +171,7 @@ namespace DBConn
         public int ExecuteDML(string _psDMLSQL)
         {
             int intTmp = 0;
-
+           
             if (this.ftrans != null)
             {
                 fcomCommand.Transaction = ftrans;

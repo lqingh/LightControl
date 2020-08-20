@@ -15,7 +15,7 @@ namespace LightControl
         int loopTootal = 0;       // 记录回路的总数
         int TootalPageNum = 0;  // 用来记录在"用户"中当前所在的页码数
         int onePageRowNum = 2;     // 设置一页显示的行数
-
+        string nodeName = "";
         DBConn.DB_SQL TEST_DB = com.TEST_DB;
         public Frm_Main()
         {
@@ -28,7 +28,7 @@ namespace LightControl
         }
 
         string strSql = "select t.id,t.name,t.note,e.`name` as eName from tags t left join equipment e on t.equipment_id = e.id limit @curPage,@pageSize";
-      
+        
         int i = 0;
         private void region_Click(object sender, EventArgs e)
         {
@@ -101,8 +101,8 @@ namespace LightControl
                     TootalPageNum = Convert.ToInt32(toolStripTextBox1.Text.ToString()) - 1;
                     dataGridView1.Rows.Clear();
 
-                    MessageBox.Show(TootalPageNum * onePageRowNum + "");
-                    MessageBox.Show(onePageRowNum + "");
+                 //   MessageBox.Show(TootalPageNum * onePageRowNum + "");
+                  
 
                     DataTable adt = new DataTable();
                     TEST_DB.Add_Param("@curPage", TootalPageNum * onePageRowNum);
@@ -110,6 +110,8 @@ namespace LightControl
                     TEST_DB.ExecuteSQL(strSql, adt);
                     tabControl11.Visible = true;
                     tabControl11.Dock = DockStyle.Fill;
+                    MessageBox.Show(adt.Rows.Count + "");
+                    MessageBox.Show(adt.Columns.Count + "");
                     dataGridView1.Rows.Clear();
                     for (i = 0; i < adt.Rows.Count; i++)
                     {
@@ -138,28 +140,79 @@ namespace LightControl
             tabControl11.Visible = false;
             panel5.Visible = false;
         }
+        string etop = "select name,id from equipment where parent_id is null";
+        string echild = "select name from equipment where parent_id = @parent_id";
         private void module_Click(object sender, EventArgs e)
         {
             manage();
             panel5.Visible = true;
            
             panel5.Dock = DockStyle.Fill;
+            treeView1.Nodes.Clear();
+            treeView1.Nodes.Add("根节点");
+            DataTable adt = new DataTable();
+            DataTable dt = new DataTable();
+            TEST_DB.ExecuteSQL(etop, adt);
+            int parent_id = 1;
+            int j = 0;
+            int k = 0;
+            for (i = 0; i < adt.Rows.Count; i++)
+            {
+                treeView1.Nodes[0].Nodes.Add(adt.Rows[i][0]+"");
+                parent_id =Convert.ToInt32( adt.Rows[i][1]);
+                TEST_DB.Add_Param("@parent_id", parent_id);
+                TEST_DB.ExecuteSQL(echild, dt);
+                for (k = 0; k < dt.Rows.Count; k++)
+                {
+                    treeView1.Nodes[0].Nodes[j].Nodes.Add(dt.Rows[k][0] + "");
+                }
+                j++;
+                dt.Dispose();
+            }
+            adt.Dispose();
+           // treeView1.Nodes.Add("根节点");
+
         }
 
         private void 添加子节点ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Frm_AddEquipment f5 = new Frm_AddEquipment();
+            f5.cnodeName = nodeName;
             if (f5.ShowDialog() == DialogResult.OK)
             {
-             //  treeView1.SelectedNode.Nodes.Add(f5.nodeName);
+               treeView1.SelectedNode.Nodes.Add(f5.nodeName);
             }
         }
-
-        private void 删除子节点ToolStripMenuItem_Click(object sender, EventArgs e)
+        string dae = "delete from equipment where id =@id || parent_id=@parent_id ";
+        string sfe = "select id from equipment where name =@name";
+        private void 删除节点ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            treeView1.SelectedNode.Remove();
-        }
+            DataTable dt = new DataTable();
 
+            TEST_DB.Add_Param("@name", treeView1.SelectedNode.Text.Trim());
+            TEST_DB.ExecuteSQL(sfe, dt);
+            if (dt.Rows.Count > 0)
+            {
+                int id =Convert.ToInt32( dt.Rows[0][0]);
+             
+                TEST_DB.Add_Param("@id", id);
+                TEST_DB.Add_Param("@parent_id", id);
+                if (TEST_DB.ExecuteDML(dae) > 0)
+                {
+                    treeView1.SelectedNode.Remove();
+                }
+                else {
+                    MessageBox.Show("删除失败");
+                }
+
+            }
+            else {
+                MessageBox.Show("删除失败");
+            }
+            dt.Dispose();
+           
+        }
+        
         private void treeView1_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
@@ -168,18 +221,45 @@ namespace LightControl
                 int x = e.X;
                 int y = e.Y;
                 TreeNode CurrentNode = treeView1.GetNodeAt(ClickPoint);
-                if (CurrentNode is TreeNode)//判断你点的是不是一个节点
+               
+                if (CurrentNode is TreeNode )//判断你点的是不是一个节点
                 {
-                    treeView1.SelectedNode = CurrentNode;
-                    CurrentNode.ContextMenuStrip = this.contextMenuStrip1;
-                    contextMenuStrip1.Show(MousePosition);
-                }
-                else
-                {
-                    treeView1.ContextMenuStrip = this.contextMenuStrip2;
-                    contextMenuStrip2.Show(MousePosition);
+                    
+                    if (CurrentNode.Level < 2)
+                    {
+                        nodeName = CurrentNode.Text;
+                        treeView1.SelectedNode = CurrentNode;
+                        CurrentNode.ContextMenuStrip = this.contextMenuStrip7;
+                        contextMenuStrip7.Show(MousePosition);
+                    }
+                    else {
+                       // nodeName ="根节点";
+                        treeView1.SelectedNode = CurrentNode;
+                        CurrentNode.ContextMenuStrip = this.contextMenuStrip1;
+                        contextMenuStrip1.Show(MousePosition);
+                    }
+                   ///MessageBox.Show(Convert.ToString(CurrentNode.Level));
+                   
                 }
             }
+        }
+        string dde = "delete from equipment where name =@name";
+        //string ide = "insert into equipment ()";
+        private void 删除节点ToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+           // MessageBox.Show(treeView1.SelectedNode.Text);
+            TEST_DB.Add_Param("@name", treeView1.SelectedNode.Text.Trim());
+          
+            if (TEST_DB.ExecuteDML(dde) > 0)
+            {
+                treeView1.SelectedNode.Remove();
+            }
+            else
+            {
+                MessageBox.Show("删除失败");
+            }
+            
+            //treeView1.SelectedNode.Remove();
         }
     }
 }

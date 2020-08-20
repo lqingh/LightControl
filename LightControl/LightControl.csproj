@@ -66,7 +66,7 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-	 <Compile Include="Frm_Addloop_Manual.cs">
+    <Compile Include="Frm_Addloop_Manual.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Frm_Addloop_Manual.Designer.cs">
@@ -95,6 +95,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Frm_AddEquipment.resx">
+      <DependentUpon>Frm_AddEquipment.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Frm_Addloop_Manual.resx">
       <DependentUpon>Frm_Addloop_Manual.cs</DependentUpon>
