@@ -93,7 +93,6 @@ namespace LightControl
                     }
                     else {
                         com.TEST_DB = TEST_DB;
-                        MessageBox.Show("登录成功");
                         Frm_Main frmMain = new Frm_Main();                  //创建主窗体对象
                         frmMain.user = userName;
                         frmMain.StartPosition = FormStartPosition.CenterScreen;
