@@ -78,6 +78,12 @@
     <Compile Include="Frm_AddEquipment.Designer.cs">
       <DependentUpon>Frm_AddEquipment.cs</DependentUpon>
     </Compile>
+    <Compile Include="Frm_EAddTags.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Frm_EAddTags.Designer.cs">
+      <DependentUpon>Frm_EAddTags.cs</DependentUpon>
+    </Compile>
     <Compile Include="Frm_Login.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -101,6 +107,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Frm_Addloop_Manual.resx">
       <DependentUpon>Frm_Addloop_Manual.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Frm_EAddTags.resx">
+      <DependentUpon>Frm_EAddTags.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Frm_Login.resx">
       <DependentUpon>Frm_Login.cs</DependentUpon>
