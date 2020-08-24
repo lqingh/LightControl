@@ -20,8 +20,8 @@ namespace LightControl
         public string eName = "";
         public int eId = 0;
         string setstring = "select t.id,t.`name`,t.note from equipment e   join tags t on e.id = t.equipment_id where e.id = @id";
-        string s = "select t.id,t.`name`,t.note from  tags t  where t.tt_id=1  && t.equipment_id is null";
-
+        string s = "select t.id,t.`name`,t.note from  tags t  where t.tt_id=@tt_id  && t.equipment_id is null";
+        string s1 = "select e.et_id from equipment e WHERE e.id = @id";
         private void Frm_EAddTags_Load(object sender, EventArgs e)
         {
             label1.Text = eName;
@@ -29,6 +29,7 @@ namespace LightControl
             TEST_DB.Add_Param("@id", eId);
             // dt.Dispose();
             TEST_DB.ExecuteSQL(setstring, dt);
+            
             int i = 0;
             for (i = 0; i < dt.Rows.Count; i++)
             {
@@ -36,7 +37,13 @@ namespace LightControl
             }
             dt.Dispose();
             dt = new DataTable();
-          
+            TEST_DB.Add_Param("@id", eId);
+            // dt.Dispose();
+            TEST_DB.ExecuteSQL(s1, dt);
+            int et_id =Convert.ToInt32( dt.Rows[0][0]);
+            dt.Dispose();
+            dt = new DataTable();
+            TEST_DB.Add_Param("@tt_id", et_id);
             TEST_DB.ExecuteSQL(s, dt);
           
             for (i = 0; i < dt.Rows.Count; i++)

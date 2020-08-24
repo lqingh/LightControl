@@ -29,11 +29,11 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Frm_Main));
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Frm_Main));
             this.panel1 = new System.Windows.Forms.Panel();
             this.scene = new System.Windows.Forms.Button();
             this.module = new System.Windows.Forms.Button();
@@ -89,6 +89,8 @@
             this.Column15 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column16 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column17 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.button2 = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.panel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -110,6 +112,8 @@
             // 
             this.panel1.BackColor = System.Drawing.Color.White;
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Controls.Add(this.button3);
+            this.panel1.Controls.Add(this.button2);
             this.panel1.Controls.Add(this.scene);
             this.panel1.Controls.Add(this.module);
             this.panel1.Controls.Add(this.richTextBox2);
@@ -249,9 +253,9 @@
             // 
             this.panel5.Controls.Add(this.dataGridView2);
             this.panel5.Controls.Add(this.treeView1);
-            this.panel5.Location = new System.Drawing.Point(0, 0);
+            this.panel5.Location = new System.Drawing.Point(354, 335);
             this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(1192, 577);
+            this.panel5.Size = new System.Drawing.Size(684, 355);
             this.panel5.TabIndex = 12;
             this.panel5.Visible = false;
             // 
@@ -290,7 +294,7 @@
             // 
             this.tabControl11.Controls.Add(this.tabPage28);
             this.tabControl11.Font = new System.Drawing.Font("黑体", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.tabControl11.Location = new System.Drawing.Point(1060, 307);
+            this.tabControl11.Location = new System.Drawing.Point(926, 105);
             this.tabControl11.Name = "tabControl11";
             this.tabControl11.SelectedIndex = 0;
             this.tabControl11.Size = new System.Drawing.Size(155, 224);
@@ -660,6 +664,44 @@
             this.Column17.HeaderText = "操作";
             this.Column17.Name = "Column17";
             // 
+            // button2
+            // 
+            this.button2.BackColor = System.Drawing.Color.White;
+            this.button2.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.button2.FlatAppearance.BorderColor = System.Drawing.Color.LightSkyBlue;
+            this.button2.FlatAppearance.MouseDownBackColor = System.Drawing.Color.LightSkyBlue;
+            this.button2.FlatAppearance.MouseOverBackColor = System.Drawing.Color.LightSkyBlue;
+            this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button2.Font = new System.Drawing.Font("黑体", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.button2.ForeColor = System.Drawing.Color.Black;
+            this.button2.Image = ((System.Drawing.Image)(resources.GetObject("button2.Image")));
+            this.button2.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.button2.Location = new System.Drawing.Point(0, 197);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(159, 35);
+            this.button2.TabIndex = 21;
+            this.button2.Text = "时控";
+            this.button2.UseVisualStyleBackColor = false;
+            // 
+            // button3
+            // 
+            this.button3.BackColor = System.Drawing.Color.White;
+            this.button3.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.button3.FlatAppearance.BorderColor = System.Drawing.Color.LightSkyBlue;
+            this.button3.FlatAppearance.MouseDownBackColor = System.Drawing.Color.LightSkyBlue;
+            this.button3.FlatAppearance.MouseOverBackColor = System.Drawing.Color.LightSkyBlue;
+            this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button3.Font = new System.Drawing.Font("黑体", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.button3.ForeColor = System.Drawing.Color.Black;
+            this.button3.Image = ((System.Drawing.Image)(resources.GetObject("button3.Image")));
+            this.button3.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.button3.Location = new System.Drawing.Point(-1, 232);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(159, 35);
+            this.button3.TabIndex = 22;
+            this.button3.Text = "节假日";
+            this.button3.UseVisualStyleBackColor = false;
+            // 
             // Frm_Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -749,5 +791,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Column15;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column16;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column17;
+        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button button2;
     }
 }
