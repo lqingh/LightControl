@@ -66,6 +66,12 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Frm_addHoliday.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Frm_addHoliday.Designer.cs">
+      <DependentUpon>Frm_addHoliday.cs</DependentUpon>
+    </Compile>
     <Compile Include="Frm_Addloop_Manual.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -77,6 +83,12 @@
     </Compile>
     <Compile Include="Frm_AddEquipment.Designer.cs">
       <DependentUpon>Frm_AddEquipment.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Frm_addScene.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Frm_addScene.Designer.cs">
+      <DependentUpon>Frm_addScene.cs</DependentUpon>
     </Compile>
     <Compile Include="Frm_EAddTags.cs">
       <SubType>Form</SubType>
@@ -105,8 +117,14 @@
     <EmbeddedResource Include="Frm_AddEquipment.resx">
       <DependentUpon>Frm_AddEquipment.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Frm_addHoliday.resx">
+      <DependentUpon>Frm_addHoliday.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Frm_Addloop_Manual.resx">
       <DependentUpon>Frm_Addloop_Manual.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Frm_addScene.resx">
+      <DependentUpon>Frm_addScene.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Frm_EAddTags.resx">
       <DependentUpon>Frm_EAddTags.cs</DependentUpon>
