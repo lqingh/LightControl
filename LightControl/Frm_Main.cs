@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -24,9 +25,69 @@ namespace LightControl
         public string user = "";
         private void Frm_Main_Load(object sender, EventArgs e)
         {
-            name.Text = user;
-        }
+           // name.Text = user;
+           // string st1 = "12:13";
 
+          //  string st2 = "14:14";
+          //  MessageBox.Show(System.DateTime.Now.ToString("y"));
+          // MessageBox.Show( DateTime.Compare(Convert.ToDateTime(st1), Convert.ToDateTime(st2))+"");
+         // MessageBox.Show( Convert.ToInt32( DateTime.Now.DayOfWeek)+"");
+            // Thread th = new Thread(new ThreadStart(ThreadMethod)); //创建线程                     
+            //  th.Start();
+        }
+        int stmcount = 100;
+        int stncount = 0;
+        DateTime[,] sceneT = new DateTime[100,2];//存储场景里每个定时的起始时间和结束时间
+        int[,] sceneO = new int[100, 4];//存储场景id,场景里面每个定时的重复日期，是否有节假日以及是否执行过，1 表示开灯完毕，2表示关灯完毕
+        int week = 0;
+        void ThreadMethod()
+        {
+            int i = 0;
+            int j = 0;
+            int rday = 0;
+            int temp = 1;
+            while (true)
+            {
+                if (com.updateTime) {
+                  //  string s = "select count(*) from scene_epoint se join scene s on se.scene_id = s.id where s.enablement = 1";
+                    string s = "select se.scene_id,e.rday,e.holiday_visiable,e.s_time,e.e_time from scene_epoint se join epoint e on se.epoint_id = e.id join scene s on se.scene_id = s.id where s.enablement = 1";
+                   
+                    DataTable dt = new DataTable();
+                    TEST_DB.ExecuteSQL(s, dt);
+                    stncount = Convert.ToInt32(dt.Rows.Count);
+                    if (stncount > stmcount) {//防止每次场景数变更时，都要改变数组大小
+                        stmcount = stncount + 50;
+                        sceneT = new DateTime[stmcount, 2];
+                        sceneO = new int[stmcount, 4];
+                    }
+                    for (i = 0; i < dt.Rows.Count; i++)
+                    {
+                        sceneO[i,0] =Convert.ToInt32( dt.Rows[i][0]);
+                        sceneO[i, 1] = Convert.ToInt32(dt.Rows[i][1]);
+                        sceneO[i, 2] = Convert.ToInt32(dt.Rows[i][2]);
+                        sceneO[i, 3] = 0;
+                        sceneT[i, 0] = Convert.ToDateTime(dt.Rows[i][3]);
+                        sceneT[i, 1] = Convert.ToDateTime(dt.Rows[i][4]);
+                    }
+                    dt.Dispose();
+                    week = Convert.ToInt32(DateTime.Now.DayOfWeek);//周日为0
+                    if (week == 0) {
+                        week = 7;
+                    }
+                    temp = 0;
+                    temp =  temp << week - 1;
+                    for (j=0;j< stncount;j++) {
+                        rday = sceneO[j,1];
+                        if ((rday & temp) >0) {
+
+                        }
+                    }
+                    com.updateTime = false;
+                }
+                Convert.ToInt32(DateTime.Now.DayOfWeek);
+                Thread.Sleep(60);//如果不延时，将占用CPU过高  
+            }
+        }
         string strSql = "select t.id,t.name,t.note,e.`name` as eName from tags t left join equipment e on t.equipment_id = e.id limit @curPage,@pageSize";
 
         int i = 0;
@@ -647,16 +708,22 @@ namespace LightControl
                     else if (rectMod.Contains(curPosition))//修改
                         editScene(Convert.ToInt32(dataGridView4.Rows[e.RowIndex].Cells[0].Value.ToString()));
                     else if (rectDS.Contains(curPosition))//定时设置
-                        timeScene(Convert.ToInt32(dataGridView4.Rows[e.RowIndex].Cells[0].Value.ToString()));
+                        timeScene(Convert.ToInt32(dataGridView4.Rows[e.RowIndex].Cells[0].Value.ToString()), dataGridView4.Rows[e.RowIndex].Cells[2].Value.ToString());
                     else if (rectHL.Contains(curPosition))//回路设置
                         loopScene(Convert.ToInt32(dataGridView4.Rows[e.RowIndex].Cells[0].Value.ToString()),dataGridView4.Rows[e.RowIndex].Cells[2].Value.ToString());
 
                 }
             }
         }
-        private void timeScene(int id)
+        private void timeScene(int id, string name)
         {
+            Frm_SceneAddTime sdt = new Frm_SceneAddTime();
+            sdt.eId = id;
+            sdt.eName = name;
+            if (sdt.ShowDialog() == DialogResult.OK)
+            {
 
+            }
         }
         private void loopScene(int id,string name) {
             Frm_loopScene ls = new Frm_loopScene();

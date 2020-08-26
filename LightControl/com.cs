@@ -9,6 +9,7 @@ namespace LightControl
     class com
     {
        public static DBConn.DB_SQL  TEST_DB = new DBConn.DB_SQL();
+       public static Boolean updateTime = true;
     }
     public class listItem
     {
