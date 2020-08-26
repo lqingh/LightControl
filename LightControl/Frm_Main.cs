@@ -144,6 +144,7 @@ namespace LightControl
             panel5.Visible = false;
             tabControl1.Visible = false;
             tabControl2.Visible = false;
+            tabControl3.Visible = false;
         }
         string etop = "select name,id from equipment where parent_id is null";
         string echild = "select name from equipment where parent_id = @parent_id";
@@ -524,13 +525,39 @@ namespace LightControl
             toolStripTextBox2.Text = (TootalPageNum + 1).ToString();
             udgv3();
         }
+        string us = "select *  from scene limit @curPage,@pageSize";
 
+        public void uscene() {
+            dataGridView4.Rows.Clear();
+            DataTable dt = new DataTable();
+            TEST_DB.Add_Param("@curPage", TootalPageNum * onePageRowNum);
+            TEST_DB.Add_Param("@pageSize", onePageRowNum);
+            TEST_DB.ExecuteSQL(us, dt);
+            // int index = 0;
+            for (i = 0; i < dt.Rows.Count; i++)
+            {
+                dataGridView4.Rows.Add(dt.Rows[i][0], TootalPageNum * onePageRowNum + i + 1, dt.Rows[i][1], Convert.ToInt32( dt.Rows[i][2])==1 ? "是":"否", dt.Rows[i][3]);
+            }
+            dt.Dispose();
+
+            toolStripLabel2.Text = "/共" + (loopTootal % onePageRowNum == 0 ? (loopTootal / onePageRowNum).ToString() : (loopTootal / onePageRowNum + 1).ToString()) + "页";
+
+        }
         private void scene_Click(object sender, EventArgs e)
         {
+            TootalPageNum = 0;
+            onePageRowNum = 2;
+            string s = "select count(*) from scene";
+            DataTable dt = new DataTable();
+            TEST_DB.ExecuteSQL(s, dt);
+            loopTootal = Convert.ToInt32(dt.Rows[0][0]);
+            dt.Dispose();
             manage();
+         
             tabControl2.Visible = true;
 
             tabControl2.Dock = DockStyle.Fill;
+            uscene();
         }
 
         private void dataGridView4_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
@@ -584,7 +611,132 @@ namespace LightControl
             Frm_addScene fa = new Frm_addScene();
             if (fa.ShowDialog() == DialogResult.OK)
             {
+                uscene();
+            }
+        }
 
+        private void dataGridView4_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.ColumnIndex == 5 && e.RowIndex >= 0)
+            {
+                Point curPosition = e.Location;//当前鼠标在当前单元格中的坐标
+                if (this.dataGridView4.Columns[e.ColumnIndex].HeaderText == "操作")
+                {
+                    Graphics g = this.dataGridView4.CreateGraphics();
+                    System.Drawing.Font myFont = new System.Drawing.Font("黑体", 12F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+                    SizeF sizeDel = g.MeasureString("删 除", myFont);
+                    SizeF sizeMod = g.MeasureString("修 改", myFont);
+                    SizeF sizeDS = g.MeasureString("定时设置", myFont);
+                    SizeF sizeHL = g.MeasureString("回路设置", myFont);
+                    float fDel = sizeDel.Width / (sizeDel.Width + sizeMod.Width + sizeDS.Width + sizeHL.Width); //
+                    float fMod = sizeMod.Width / (sizeDel.Width + sizeMod.Width + sizeDS.Width + sizeHL.Width);
+                    float fDS = sizeDS.Width / (sizeDel.Width + sizeMod.Width + sizeDS.Width + sizeHL.Width); //
+                    float fHL = sizeHL.Width / (sizeDel.Width + sizeMod.Width + sizeDS.Width + sizeHL.Width);
+
+                    Rectangle rectTotal = new Rectangle(0, 0, this.dataGridView4.Columns[e.ColumnIndex].Width, this.dataGridView4.Rows[e.RowIndex].Height);
+                    RectangleF rectDel = new RectangleF(rectTotal.Left, rectTotal.Top, rectTotal.Width * fDel, rectTotal.Height);
+                    RectangleF rectMod = new RectangleF(rectDel.Right, rectTotal.Top, rectTotal.Width * fMod, rectTotal.Height);
+                    RectangleF rectDS = new RectangleF(rectMod.Right, rectTotal.Top, rectTotal.Width * fDS, rectTotal.Height);
+                    RectangleF rectHL = new RectangleF(rectDS.Right, rectTotal.Top, rectTotal.Width * fHL, rectTotal.Height);
+
+                    //   MessageBox.Show(dataGridView8.Rows[e.RowIndex].Cells[0].Value.ToString());
+                    //  RectangleF rectLook = new RectangleF(rectMod.Right, rectTotal.Top, rectTotal.Width * fLook, rectTotal.Height);
+                    //判断当前鼠标在哪个“按钮”范围内
+                    if (rectDel.Contains(curPosition))//删除
+                        deleteScene(Convert.ToInt32(dataGridView4.Rows[e.RowIndex].Cells[0].Value.ToString()));
+                    else if (rectMod.Contains(curPosition))//修改
+                        editScene(Convert.ToInt32(dataGridView4.Rows[e.RowIndex].Cells[0].Value.ToString()));
+                    else if (rectDS.Contains(curPosition))//定时设置
+                        timeScene(Convert.ToInt32(dataGridView4.Rows[e.RowIndex].Cells[0].Value.ToString()));
+                    else if (rectHL.Contains(curPosition))//回路设置
+                        loopScene(Convert.ToInt32(dataGridView4.Rows[e.RowIndex].Cells[0].Value.ToString()),dataGridView4.Rows[e.RowIndex].Cells[2].Value.ToString());
+
+                }
+            }
+        }
+        private void timeScene(int id)
+        {
+
+        }
+        private void loopScene(int id,string name) {
+            Frm_loopScene ls = new Frm_loopScene();
+            ls.eId = id;
+            ls.eName = name;
+            if (ls.ShowDialog() == DialogResult.OK) {
+
+            }
+        }
+        private void deleteScene(int id)
+        {
+            if (MessageBox.Show("您确定要删除该记录吗？", "提示", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                string s = "delete from scene where id =@id";
+                TEST_DB.Add_Param("@id", id);
+                if (TEST_DB.ExecuteDML(s) > 0)
+                {
+                    MessageBox.Show("删除成功");
+                    loopTootal = loopTootal - 1;
+                    uscene();
+
+                }
+                else
+                {
+                    MessageBox.Show("删除失败");
+                }
+            }
+        }
+        private void editScene(int id)
+        {
+            Frm_addScene fas = new Frm_addScene();
+            fas.id = id;
+            if (fas.ShowDialog() == DialogResult.OK)
+            {
+                uscene();
+            }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            TootalPageNum = 0;
+            onePageRowNum = 2;
+            string s = "select count(*) from epoint";
+            DataTable dt = new DataTable();
+            TEST_DB.ExecuteSQL(s, dt);
+            loopTootal = Convert.ToInt32(dt.Rows[0][0]);
+            dt.Dispose();
+            manage();
+
+            tabControl3.Visible = true;
+
+            tabControl3.Dock = DockStyle.Fill;
+            utime();
+        }
+     
+        public void utime()
+        {
+            string s = "select id,name,s_time,e_time,note  from epoint limit @curPage,@pageSize";
+
+            dataGridView5.Rows.Clear();
+            DataTable dt = new DataTable();
+            TEST_DB.Add_Param("@curPage", TootalPageNum * onePageRowNum);
+            TEST_DB.Add_Param("@pageSize", onePageRowNum);
+            TEST_DB.ExecuteSQL(s, dt);
+            // int index = 0;
+            for (i = 0; i < dt.Rows.Count; i++)
+            {
+                dataGridView5.Rows.Add(dt.Rows[i][0], TootalPageNum * onePageRowNum + i + 1, dt.Rows[i][1], dt.Rows[i][2], dt.Rows[i][3], dt.Rows[i][4]);
+            }
+            dt.Dispose();
+
+            toolStripLabel3.Text = "/共" + (loopTootal % onePageRowNum == 0 ? (loopTootal / onePageRowNum).ToString() : (loopTootal / onePageRowNum + 1).ToString()) + "页";
+
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            Frm_addTime at = new Frm_addTime();
+            if (at.ShowDialog() == DialogResult.OK) {
+                utime();
             }
         }
     }

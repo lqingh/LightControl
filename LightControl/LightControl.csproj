@@ -90,6 +90,12 @@
     <Compile Include="Frm_addScene.Designer.cs">
       <DependentUpon>Frm_addScene.cs</DependentUpon>
     </Compile>
+    <Compile Include="Frm_addTime.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Frm_addTime.Designer.cs">
+      <DependentUpon>Frm_addTime.cs</DependentUpon>
+    </Compile>
     <Compile Include="Frm_EAddTags.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -101,6 +107,12 @@
     </Compile>
     <Compile Include="Frm_Login.designer.cs">
       <DependentUpon>Frm_Login.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Frm_loopScene.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Frm_loopScene.Designer.cs">
+      <DependentUpon>Frm_loopScene.cs</DependentUpon>
     </Compile>
     <Compile Include="Frm_Main.cs">
       <SubType>Form</SubType>
@@ -126,11 +138,17 @@
     <EmbeddedResource Include="Frm_addScene.resx">
       <DependentUpon>Frm_addScene.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Frm_addTime.resx">
+      <DependentUpon>Frm_addTime.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Frm_EAddTags.resx">
       <DependentUpon>Frm_EAddTags.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Frm_Login.resx">
       <DependentUpon>Frm_Login.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Frm_loopScene.resx">
+      <DependentUpon>Frm_loopScene.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Frm_Main.resx">
       <DependentUpon>Frm_Main.cs</DependentUpon>

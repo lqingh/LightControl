@@ -123,6 +123,7 @@
             this.Controls.Add(this.panel1);
             this.Name = "Frm_addScene";
             this.Text = "Frm_addScene";
+            this.Load += new System.EventHandler(this.Frm_addScene_Load);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.ResumeLayout(false);
