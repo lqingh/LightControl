@@ -18,6 +18,7 @@ namespace LightControl
         int TootalPageNum = 0;  // 用来记录在"用户"中当前所在的页码数
         int onePageRowNum = 2;     // 设置一页显示的行数
         string nodeName = "";
+        isee see;
         DBConn.DB_SQL TEST_DB = com.TEST_DB;
         public Frm_Main()
         {
@@ -27,12 +28,13 @@ namespace LightControl
         private void Frm_Main_Load(object sender, EventArgs e)
         {
             name.Text = user;
-            
+            see = new isee();
+            see.getIseeData();
             //isee.getIseeData();
             //  string st1 = "12:13";
 
             // string st2 = "14:14";
-              //MessageBox.Show(see.getOneTagValue("test34") + "");
+            //MessageBox.Show(see.getOneTagValue("test34") + "");
             // MessageBox.Show( DateTime.Compare(Convert.ToDateTime(st1), Convert.ToDateTime(st2))+"");
             // MessageBox.Show( Convert.ToInt32( DateTime.Now.DayOfWeek)+"");
             // Thread th = new Thread(new ThreadStart(ThreadMethod)); //创建线程                     
@@ -62,8 +64,7 @@ namespace LightControl
             DataTable dt,dt1;
             string s,s1;
             string szdtag;
-            isee see = new isee();
-            see.getIseeData();
+           
             while (true)
             {
                 if (com.updateTime) {
@@ -205,20 +206,15 @@ namespace LightControl
                 Thread.Sleep(60);//如果不延时，将占用CPU过高  
             }
         }
-        string strSql = "select t.id,t.name,t.note,e.`name` as eName from tags t left join equipment e on t.equipment_id = e.id limit @curPage,@pageSize";
+        string strSql = "select t.id,t.name,t.note,e.`name` as eName,t.tt_id,tt.type  from tags t left join equipment e on t.equipment_id = e.id join tags_type tt on t.tt_id = tt.id limit @curPage,@pageSize";
 
-        int i = 0;
-        private void region_Click(object sender, EventArgs e)
-        {
-            //MessageBox.Show(TootalPageNum * onePageRowNum + "");
-            // MessageBox.Show(onePageRowNum + "");
-            TootalPageNum = 0;
-            onePageRowNum = 2;
+      
+        private void uregion() {
+            int i = 0;
             DataTable dt = new DataTable();
             TEST_DB.Add_Param("@curPage", TootalPageNum * onePageRowNum);
             TEST_DB.Add_Param("@pageSize", onePageRowNum);
             TEST_DB.ExecuteSQL(strSql, dt);
-           // MessageBox.Show(Convert.ToString(dt.Rows.Count));
             manage();
             tabControl11.Visible = true;
 
@@ -226,15 +222,47 @@ namespace LightControl
             dataGridView1.Rows.Clear();
             for (i = 0; i < dt.Rows.Count; i++)
             {
-                dataGridView1.Rows.Add(dt.Rows[i][0], TootalPageNum * onePageRowNum + i + 1, dt.Rows[i][1], dt.Rows[i][2], dt.Rows[i][3]);
+               // MessageBox.Show(Convert.ToString(dt.Rows[i][1]));
+                if (Convert.ToInt32(dt.Rows[i][4]) == 1) {//手自动
+                    if (see.getOneTagValue(Convert.ToString(dt.Rows[i][1])) == 1)
+                    {
+                        dataGridView1.Rows.Add(dt.Rows[i][0], TootalPageNum * onePageRowNum + i + 1, dt.Rows[i][1], dt.Rows[i][5], dt.Rows[i][2], dt.Rows[i][3], "手动", dt.Rows[i][4]);
+
+                    }
+                    else
+                    {
+                        dataGridView1.Rows.Add(dt.Rows[i][0], TootalPageNum * onePageRowNum + i + 1, dt.Rows[i][1], dt.Rows[i][5], dt.Rows[i][2], dt.Rows[i][3], "自动", dt.Rows[i][4]);
+                    }
+                } else if (Convert.ToInt32(dt.Rows[i][4]) == 2) {//回路控制
+                    if (see.getOneTagValue(Convert.ToString(dt.Rows[i][1])) == 1)
+                    {
+                        dataGridView1.Rows.Add(dt.Rows[i][0], TootalPageNum * onePageRowNum + i + 1, dt.Rows[i][1], dt.Rows[i][5], dt.Rows[i][2], dt.Rows[i][3], "开启", dt.Rows[i][4]);
+
+                    }
+                    else
+                    {
+                        dataGridView1.Rows.Add(dt.Rows[i][0], TootalPageNum * onePageRowNum + i + 1, dt.Rows[i][1], dt.Rows[i][5], dt.Rows[i][2], dt.Rows[i][3], "关闭", dt.Rows[i][4]);
+                    }
+                }
+                else if (Convert.ToInt32(dt.Rows[i][4]) == 3)
+                {//数据收集
+                    dataGridView1.Rows.Add(dt.Rows[i][0], TootalPageNum * onePageRowNum + i + 1, dt.Rows[i][1], dt.Rows[i][5], dt.Rows[i][2], dt.Rows[i][3], "无", dt.Rows[i][4]);
+                }
+                
             }
-            string s = "select count(*) from tags";
             dt.Dispose();
-            dt = new DataTable();
+            toolStripLabel7.Text = "/共" + (loopTootal % onePageRowNum == 0 ? (loopTootal / onePageRowNum).ToString() : (loopTootal / onePageRowNum + 1).ToString()) + "页";
+        }
+        private void region_Click(object sender, EventArgs e)
+        {
+            TootalPageNum = 0;
+            onePageRowNum = 4;
+            string s = "select count(*) from tags";
+            DataTable dt = new DataTable();
             TEST_DB.ExecuteSQL(s, dt);
             loopTootal = Convert.ToInt32(dt.Rows[0][0]);
             dt.Dispose();
-            toolStripLabel7.Text = "/共" + (loopTootal % onePageRowNum == 0 ? (loopTootal / onePageRowNum).ToString() : (loopTootal / onePageRowNum + 1).ToString()) + "页";
+            uregion();
             //   toolStripTextBox1.Text = "1";
         }
 
@@ -274,6 +302,7 @@ namespace LightControl
 
         private void toolStripTextBox1_TextChanged(object sender, EventArgs e)
         {
+            int i = 0;
             if (toolStripTextBox1.Text != "")
             {
                 if (Convert.ToInt32(toolStripTextBox1.Text.ToString()) > 0 && Convert.ToInt32(toolStripTextBox1.Text.ToString()) <= ((loopTootal % onePageRowNum) == 0 ? (loopTootal / onePageRowNum) : (loopTootal / onePageRowNum)) + 1)
@@ -328,6 +357,7 @@ namespace LightControl
         string echild = "select name from equipment where parent_id = @parent_id";
         private void module_Click(object sender, EventArgs e)
         {
+            int i = 0;
             manage();
             panel5.Visible = true;
 
@@ -530,7 +560,7 @@ namespace LightControl
         }
         string hs = "select *  from holidays limit @curPage,@pageSize";
         void udgv3() {
-          
+            int i = 0;
             dataGridView3.Rows.Clear();
             DataTable dt = new DataTable();
             TEST_DB.Add_Param("@curPage", TootalPageNum * onePageRowNum);
@@ -609,7 +639,12 @@ namespace LightControl
 
         private void button5_Click_1(object sender, EventArgs e)
         {
-           
+            Frm_Addloop_Manual ah = new Frm_Addloop_Manual();
+            if (ah.ShowDialog() == DialogResult.OK)
+            {
+                loopTootal = loopTootal + 1;
+                uregion();
+            }
         }
         private void deleteHoliday(int id)
         {
@@ -706,6 +741,7 @@ namespace LightControl
         string us = "select *  from scene limit @curPage,@pageSize";
 
         public void uscene() {
+            int i = 0;
             dataGridView4.Rows.Clear();
             DataTable dt = new DataTable();
             TEST_DB.Add_Param("@curPage", TootalPageNum * onePageRowNum);
@@ -899,7 +935,7 @@ namespace LightControl
         public void utime()
         {
             string s = "select id,name,s_time,e_time,note  from epoint limit @curPage,@pageSize";
-
+            int i = 0;
             dataGridView5.Rows.Clear();
             DataTable dt = new DataTable();
             TEST_DB.Add_Param("@curPage", TootalPageNum * onePageRowNum);
@@ -921,6 +957,192 @@ namespace LightControl
             Frm_addTime at = new Frm_addTime();
             if (at.ShowDialog() == DialogResult.OK) {
                 utime();
+            }
+        }
+
+        private void dataGridView1_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
+        {
+            if (e.ColumnIndex == 7 && e.RowIndex >= 0)
+            {
+
+                if (this.dataGridView1.Columns[e.ColumnIndex].HeaderText == "操作")
+                {
+
+                    StringFormat sf = StringFormat.GenericDefault.Clone() as StringFormat;//设置重绘入单元格的字体样式
+                    sf.FormatFlags = StringFormatFlags.DisplayFormatControl;
+                    sf.Alignment = StringAlignment.Center;
+                    sf.LineAlignment = StringAlignment.Center;
+                    sf.Trimming = StringTrimming.EllipsisCharacter;
+
+                    e.PaintBackground(e.CellBounds, false);//重绘边框
+
+                    //设置要写入字体的大小
+                    System.Drawing.Font myFont = new System.Drawing.Font("幼圆", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+                    SizeF sizeDel = e.Graphics.MeasureString("删 除", myFont);
+                   
+                    SizeF sizeMod = e.Graphics.MeasureString("修 改", myFont);
+                    SizeF sizeDS = e.Graphics.MeasureString("启用", myFont);
+                   
+                    float fDel = sizeDel.Width / (sizeDel.Width + sizeMod.Width + sizeDS.Width ); //
+                    float fMod = sizeMod.Width / (sizeDel.Width + sizeMod.Width + sizeDS.Width);
+                    float fDS = sizeDS.Width / (sizeDel.Width + sizeMod.Width + sizeDS.Width); //
+                   
+
+                    //  float fLook = sizeLook.Width / (sizeDel.Width + sizeMod.Width + sizeLook.Width);
+
+                    //设置每个“按钮的边界”
+                    RectangleF rectDel = new RectangleF(e.CellBounds.Left, e.CellBounds.Top, e.CellBounds.Width * fDel, e.CellBounds.Height);
+                    RectangleF rectMod = new RectangleF(rectDel.Right, e.CellBounds.Top, e.CellBounds.Width * fMod, e.CellBounds.Height);
+                    RectangleF rectDS = new RectangleF(rectMod.Right, e.CellBounds.Top, e.CellBounds.Width * fDS, e.CellBounds.Height);
+                  
+                    e.Graphics.DrawString("删 除", myFont, Brushes.Black, rectDel, sf); //绘制“按钮”
+                    e.Graphics.DrawString("修 改", myFont, Brushes.Black, rectMod, sf);
+                  //  MessageBox.Show(Convert.ToString(this.dataGridView1.Rows[e.RowIndex].Cells[7].Value));
+                    if (Convert.ToInt32(this.dataGridView1.Rows[e.RowIndex].Cells[7].Value) == 1)
+                    {
+                        if (Convert.ToString(this.dataGridView1.Rows[e.RowIndex].Cells[6].Value) == "手动")
+                        {
+                            e.Graphics.DrawString("自动", myFont, Brushes.Black, rectDS, sf); //绘制“按钮”
+                        }
+                        else
+                        {
+                            e.Graphics.DrawString("手动", myFont, Brushes.Black, rectDS, sf); //绘制“按钮”
+                        }
+                    }
+                    else if (Convert.ToInt32(this.dataGridView1.Rows[e.RowIndex].Cells[7].Value) == 2)
+                    {
+                        if (Convert.ToString(this.dataGridView1.Rows[e.RowIndex].Cells[6].Value) == "开启")
+                        {
+                            e.Graphics.DrawString("关闭", myFont, Brushes.Black, rectDS, sf); //绘制“按钮”
+                        }
+                        else
+                        {
+                            e.Graphics.DrawString("开启", myFont, Brushes.Black, rectDS, sf); //绘制“按钮”
+                        }
+                    }
+                    else if (Convert.ToInt32(this.dataGridView1.Rows[e.RowIndex].Cells[7].Value) == 3)
+                    {
+
+                    }
+                  
+                    
+                  
+                    e.Handled = true;
+                }
+
+            }
+        }
+
+        private void dataGridView1_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.ColumnIndex == 7 && e.RowIndex >= 0)
+            {
+                Point curPosition = e.Location;//当前鼠标在当前单元格中的坐标
+                if (this.dataGridView1.Columns[e.ColumnIndex].HeaderText == "操作")
+                {
+                    Graphics g = this.dataGridView1.CreateGraphics();
+                    System.Drawing.Font myFont = new System.Drawing.Font("黑体", 12F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+                    SizeF sizeDel = g.MeasureString("删 除", myFont);
+                    SizeF sizeMod = g.MeasureString("修 改", myFont);
+                    SizeF sizeDS = g.MeasureString("启用", myFont);
+                  
+                    float fDel = sizeDel.Width / (sizeDel.Width + sizeMod.Width + sizeDS.Width ); //
+                    float fMod = sizeMod.Width / (sizeDel.Width + sizeMod.Width + sizeDS.Width);
+                    float fDS = sizeDS.Width / (sizeDel.Width + sizeMod.Width + sizeDS.Width); //
+                  
+                    Rectangle rectTotal = new Rectangle(0, 0, this.dataGridView1.Columns[e.ColumnIndex].Width, this.dataGridView1.Rows[e.RowIndex].Height);
+                    RectangleF rectDel = new RectangleF(rectTotal.Left, rectTotal.Top, rectTotal.Width * fDel, rectTotal.Height);
+                    RectangleF rectMod = new RectangleF(rectDel.Right, rectTotal.Top, rectTotal.Width * fMod, rectTotal.Height);
+                    RectangleF rectDS = new RectangleF(rectMod.Right, rectTotal.Top, rectTotal.Width * fDS, rectTotal.Height);
+
+                    //   MessageBox.Show(dataGridView8.Rows[e.RowIndex].Cells[0].Value.ToString());
+                    //  RectangleF rectLook = new RectangleF(rectMod.Right, rectTotal.Top, rectTotal.Width * fLook, rectTotal.Height);
+                    //判断当前鼠标在哪个“按钮”范围内
+                    if (rectDel.Contains(curPosition))//删除
+                        deleteTag(Convert.ToInt32(dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString()));
+                    else if (rectMod.Contains(curPosition))//修改
+                        editScene(Convert.ToInt32(dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString()));
+                    else if (rectDS.Contains(curPosition)) {
+                        if (Convert.ToInt32(this.dataGridView1.Rows[e.RowIndex].Cells[7].Value) != 3)
+                        {
+                         string s =   cTag(dataGridView1.Rows[e.RowIndex].Cells[2].Value.ToString(), dataGridView1.Rows[e.RowIndex].Cells[6].Value.ToString(), Convert.ToInt32(this.dataGridView1.Rows[e.RowIndex].Cells[7].Value));
+                            dataGridView1.Rows[e.RowIndex].Cells[6].Value = s;
+                        }
+
+                    }
+                      //  cTag(dataGridView1.Rows[e.RowIndex].Cells[2].Value.ToString());
+                 
+                }
+            }
+        }
+        private string cTag(string tagName, string  name, int tt_id) {
+            string s,temp;
+            temp = name;
+            if (MessageBox.Show("您确定更改"+ name + "状态吗？", "提示", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                if (tt_id == 1)
+                {
+                    if (name == "手动")
+                    {
+                        see.ModifyOneTag(tagName, 0);//改成自动
+                        temp = "自动";
+                    }
+                    else
+                    {
+                        see.ModifyOneTag(tagName, 1);
+                        temp = "手动";
+                    }
+                }
+                else if (tt_id == 2)
+                {
+                    DataTable dt = new DataTable();
+                    s = "select t1.`name` from tags t join equipment e on t.equipment_id = e.id join tags t1 on e.szd_tag = t1.id where t.name= @name";
+                    TEST_DB.Add_Param("@name", tagName);
+                    TEST_DB.ExecuteSQL(s, dt);
+                    if (dt.Rows.Count > 0)
+                    {
+                        MessageBox.Show(Convert.ToString(dt.Rows[0][0]));
+                        if (see.getOneTagValue(Convert.ToString( dt.Rows[0][0])) == 1) {
+                            MessageBox.Show("请先将回路的手自动标识设置为自动");
+                            dt.Dispose();
+                            return name;
+                        }
+                        if (name == "开启")
+                        {  
+                            see.ModifyOneTag(tagName, 0);//关闭
+                            temp = "关闭";
+                        }
+                        else
+                        {
+                            see.ModifyOneTag(tagName, 1);
+                            temp = "开启";
+                        }
+                    }
+                    else {
+                        MessageBox.Show("请先在区域中配置回路的手自动标识");
+                    }   
+                }
+                
+            }
+            return temp;
+        }
+        private void deleteTag(int id)
+        {
+            if (MessageBox.Show("您确定要删除该记录吗？", "提示", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                string s = "delete from tags where id =@id";
+                TEST_DB.Add_Param("@id", id);
+                if (TEST_DB.ExecuteDML(s) > 0)
+                {
+                    MessageBox.Show("删除成功");
+                    loopTootal = loopTootal - 1;
+                    uregion();
+
+                }
+                else
+                {
+                    MessageBox.Show("删除失败");
+                }
             }
         }
     }
