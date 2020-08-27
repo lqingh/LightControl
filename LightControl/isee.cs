@@ -18,21 +18,23 @@ namespace LightControl
         DBConn.DB_SQL TEST_DB = com.TEST_DB;
         string strSql = "select * from isee";
         DataTable dt = new DataTable();
-        public void ModifyOneTag()
+        dvRdbDispatchServer t;
+        public int getOneTagValue(string s )
         {
-            dvRdbDispatchServer t = new dvRdbDispatchServer();
-            int s = t.Connect(ip, 0, user, password, appName);
-            t.ModifyTagFieldValue("test3.F_CV", 12);
-                  
+            return Convert.ToInt32( t.QuickGetTagFieldValue(s+".F_CV"));
+        }
+        public void ModifyOneTag(string s,int value)
+        {
+            t.ModifyTagFieldValue(s + ".F_CV", value);      
         }
         public void ModifyTags()
         {
             dvRdbDispatchServer t = new dvRdbDispatchServer();
             int s = t.Connect("127.0.0.1", 0, "Admin", "Admin", appName);
             Console.WriteLine(Convert.ToString(s));
-            t.ModifyTagFieldValue("test3.F_CV", 12);
-            
-           
+            string s1 = Convert.ToString(t.QuickGetTagFieldValue("test3.F_CV"));
+            Console.WriteLine(Convert.ToString(t.QuickGetTagFieldValue("test3.F_CV")));
+            // t.ModifyTagFieldValue("test3.F_CV", 12);
         }
         public void getIseeData() {
             TEST_DB.ExecuteSQL(strSql, dt);
@@ -44,6 +46,8 @@ namespace LightControl
                 ip = dt.Rows[0]["ip"].ToString();
                 user = dt.Rows[0]["user"].ToString();
                 password = dt.Rows[0]["password"].ToString();
+                t = new dvRdbDispatchServer();
+                int s = t.Connect(ip, 0, user, password, appName);
             }
         }
     }

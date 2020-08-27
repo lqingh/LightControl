@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -25,13 +26,15 @@ namespace LightControl
         public string user = "";
         private void Frm_Main_Load(object sender, EventArgs e)
         {
-           // name.Text = user;
-           // string st1 = "12:13";
+            name.Text = user;
+            
+            //isee.getIseeData();
+            //  string st1 = "12:13";
 
-          //  string st2 = "14:14";
-          //  MessageBox.Show(System.DateTime.Now.ToString("y"));
-          // MessageBox.Show( DateTime.Compare(Convert.ToDateTime(st1), Convert.ToDateTime(st2))+"");
-         // MessageBox.Show( Convert.ToInt32( DateTime.Now.DayOfWeek)+"");
+            // string st2 = "14:14";
+              //MessageBox.Show(see.getOneTagValue("test34") + "");
+            // MessageBox.Show( DateTime.Compare(Convert.ToDateTime(st1), Convert.ToDateTime(st2))+"");
+            // MessageBox.Show( Convert.ToInt32( DateTime.Now.DayOfWeek)+"");
             // Thread th = new Thread(new ThreadStart(ThreadMethod)); //创建线程                     
             //  th.Start();
         }
@@ -39,20 +42,35 @@ namespace LightControl
         int stncount = 0;
         DateTime[,] sceneT = new DateTime[100,2];//存储场景里每个定时的起始时间和结束时间
         int[,] sceneO = new int[100, 4];//存储场景id,场景里面每个定时的重复日期，是否有节假日以及是否执行过，1 表示开灯完毕，2表示关灯完毕
+        int hmcount = 50;
+        int hncount = 0;
+        DateTime[,] holiday = new DateTime[50, 2];//节假日
         int week = 0;
         void ThreadMethod()
         {
             int i = 0;
             int j = 0;
+            int k = 0;
             int rday = 0;
+            int tag = 0;
             int temp = 1;
+            DateTime tNow;
+            int oldDay = 0;
+            int day = 0;
+            Boolean isHoliday = false; //判断当前是否为节假日
+            Hashtable ht = new Hashtable();
+            DataTable dt,dt1;
+            string s,s1;
+            string szdtag;
+            isee see = new isee();
+            see.getIseeData();
             while (true)
             {
                 if (com.updateTime) {
                   //  string s = "select count(*) from scene_epoint se join scene s on se.scene_id = s.id where s.enablement = 1";
-                    string s = "select se.scene_id,e.rday,e.holiday_visiable,e.s_time,e.e_time from scene_epoint se join epoint e on se.epoint_id = e.id join scene s on se.scene_id = s.id where s.enablement = 1";
+                    s = "select se.scene_id,e.rday,e.holiday_visiable,e.s_time,e.e_time from scene_epoint se join epoint e on se.epoint_id = e.id join scene s on se.scene_id = s.id where s.enablement = 1";
                    
-                    DataTable dt = new DataTable();
+                    dt = new DataTable();
                     TEST_DB.ExecuteSQL(s, dt);
                     stncount = Convert.ToInt32(dt.Rows.Count);
                     if (stncount > stmcount) {//防止每次场景数变更时，都要改变数组大小
@@ -70,21 +88,120 @@ namespace LightControl
                         sceneT[i, 1] = Convert.ToDateTime(dt.Rows[i][4]);
                     }
                     dt.Dispose();
-                    week = Convert.ToInt32(DateTime.Now.DayOfWeek);//周日为0
-                    if (week == 0) {
-                        week = 7;
+                    s = "select sDate,eDate from holidays ";//查找节假日
+                    dt = new DataTable();
+                    TEST_DB.ExecuteSQL(s, dt);
+                    hncount = Convert.ToInt32(dt.Rows.Count);
+                    if (hncount > hmcount)
+                    {//防止每次节假日数变更时，都要改变数组大小
+                        hmcount = hmcount + 50;
+                        holiday = new DateTime[hmcount, 2];
                     }
-                    temp = 0;
-                    temp =  temp << week - 1;
-                    for (j=0;j< stncount;j++) {
-                        rday = sceneO[j,1];
-                        if ((rday & temp) >0) {
-
-                        }
+                    dt.Dispose();
+                    s = "select t.`name`,ts.`name` as szd from tags t join equipment e on t.equipment_id = e.id  join tags ts on e.szd_tag = ts.id";//查找回路对应的手自动回路
+                    dt = new DataTable();
+                    TEST_DB.ExecuteSQL(s, dt);
+                    ht.Clear();
+                    for (i = 0; i < dt.Rows.Count; i++)
+                    {
+                        ht.Add(Convert.ToString( dt.Rows[i][0]), Convert.ToString(dt.Rows[i][1]));
                     }
+                    dt.Dispose();
                     com.updateTime = false;
                 }
-                Convert.ToInt32(DateTime.Now.DayOfWeek);
+                day =  System.DateTime.Now.Day;
+                if (day != oldDay) {
+                    oldDay = day;
+                    for (j = 0; j < stncount; j++)//防止由于切换成手自动后跳过关灯，使得标识位为1，导致第二天无法正常开灯
+                    {
+                        sceneO[j, 3] = 0;
+                    }
+                    week = Convert.ToInt32(DateTime.Now.DayOfWeek);//周日为0
+                    if (week == 0)
+                    {
+                        week = 7;
+                    }
+                   
+                    temp = 0;
+                    temp = temp << week - 1;
+                    isHoliday = false;
+                    for (j = 0; j < hncount; j++)
+                    {
+                        if (DateTime.Compare(System.DateTime.Now,holiday[j, 0])>=0 && DateTime.Compare(System.DateTime.Now, holiday[j, 1]) <= 0) {
+                            isHoliday = true;
+                            break;
+                        }
+                    }
+                }
+                tNow = Convert.ToDateTime(System.DateTime.Now.ToString("t"));
+                s = "select t.name from scene s join scene_tags st on s.id = st.scene_id join tags t on st.tags_id = t.id where s.id = @id";
+                s1 = "select e.s_time,e.e_time,s.enablement from scene_tags st join scene s on st.scene_id = s.id join tags t on st.tags_id = t.id join scene_epoint se on st.scene_id = se.scene_id join epoint e on se.epoint_id = e.id where t.name = @name";
+                for (j = 0; j < stncount; j++)
+                {
+                   
+                    if (sceneO[j, 2] == 1 && isHoliday)//有启用节假日，并且当前为节假日
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        rday = sceneO[j, 1];
+                        if ((rday & temp) > 0)//判断是否在重复日期之内
+                        {
+                            if (DateTime.Compare(sceneT[j, 0], tNow) <= 0 && DateTime.Compare(sceneT[j, 1], tNow) >=0 && sceneO[j, 3] != 1)//到达开灯时间，且之前没有开灯过
+                            {
+                                sceneO[j, 3] = 1;
+                                TEST_DB.Add_Param("@id", sceneO[j, 0]);
+                                dt = new DataTable();
+                                TEST_DB.ExecuteSQL(s, dt);
+                                for (i = 0; i < dt.Rows.Count; i++)
+                                {
+                                    szdtag = Convert.ToString(ht[Convert.ToString(dt.Rows[i][0])]);
+                                    if (see.getOneTagValue(szdtag) == 0)//判断手自动状态,0为自动，1为手动
+                                    {
+                                        see.ModifyOneTag(Convert.ToString(dt.Rows[i][0]), 1);//1为开灯，0为关灯
+                                    }
+                                }
+                                dt.Dispose();
+                            }
+                            else if (DateTime.Compare(sceneT[j, 1], tNow) <= 0 && sceneO[j, 3] != 2)//到达关灯时间，且之前没有关灯过
+                            {
+                                sceneO[j, 3] = 2;
+                                TEST_DB.Add_Param("@id", sceneO[j, 0]);
+                                dt = new DataTable();
+                                TEST_DB.ExecuteSQL(s, dt);
+                                for (i = 0; i < dt.Rows.Count; i++)
+                                {
+                                    szdtag = Convert.ToString(ht[Convert.ToString(dt.Rows[i][0])]);
+                                    if (see.getOneTagValue(szdtag) == 0)//判断手自动状态,0为自动，1为手动
+                                    {
+                                        TEST_DB.Add_Param("@name", Convert.ToString(dt.Rows[i][0]));
+                                        dt1 = new DataTable();
+                                        TEST_DB.ExecuteSQL(s, dt);
+                                        tag = 0;
+                                        if (dt1.Rows.Count > 1)
+                                        {//判断回路是否存在于多个场景
+                                            for (i = 0; i < dt.Rows.Count; i++)//判断不同场景上时间是否有重叠
+                                            {
+                                                if (Convert.ToInt32( dt.Rows[i][2]) == 1) {//判断场景是否启用
+                                                    if (DateTime.Compare(Convert.ToDateTime(dt.Rows[i][0]), sceneT[j, 1]) <=0 && DateTime.Compare(Convert.ToDateTime(dt.Rows[i][1]), sceneT[j, 1]) > 0) {
+                                                        tag = 1;
+                                                        break;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        if (tag ==0) {
+                                            see.ModifyOneTag(Convert.ToString(dt.Rows[i][0]), 0);
+                                        }
+                                        dt1.Dispose();
+                                    }
+                                }
+                                dt.Dispose();
+                            }
+                        }
+                    }
+                }
                 Thread.Sleep(60);//如果不延时，将占用CPU过高  
             }
         }
