@@ -64,7 +64,7 @@ namespace LightControl
         private void Frm_SceneAddTime_Load(object sender, EventArgs e)
         {
             label1.Text = eName;
-            string s = "select e.id,e.`name`,e.note from epoint e where  e.id not in (select ep.id from scene_epoint ses join epoint ep on ses.scene_id = ep.id where ses.scene_id = @id) ";
+            string s = "select e.id,e.`name`,e.note from epoint e where  e.id not in (select ep.id from scene_epoint ses join epoint ep on ses.epoint_id = ep.id where ses.scene_id = @id) ";
             string s1 = "select e.id,e.`name`,e.note from scene_epoint se join scene s on se.scene_id = s.id join epoint e on se.epoint_id = e.id where se.scene_id = @id";
             DataTable dt = new DataTable();
             TEST_DB.Add_Param("@id", eId);

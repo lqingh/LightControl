@@ -18,6 +18,7 @@ namespace LightControl
             InitializeComponent();
         }
         int rday = 0;
+        public  int id = 0;
         private void button1_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
@@ -29,31 +30,71 @@ namespace LightControl
                 MessageBox.Show("重复日期至少要选择一天");
                 return;
             }
-            MessageBox.Show(rday + "");
+           // MessageBox.Show(rday + "");
             if (textBox1.Text.Length == 0) {
                 MessageBox.Show("名称不能为空");
                 return;
             }
-            string s = "insert into epoint(s_time,e_time,rday,note,name,holiday_visiable) value(@s_time,@e_time,@rday,@note,@name,@holiday_visiable)";
-            TEST_DB.Add_Param("@s_time", dateTimePicker1.Value);
-            TEST_DB.Add_Param("@e_time", dateTimePicker2.Value);
-            TEST_DB.Add_Param("@rday", rday);
-            TEST_DB.Add_Param("@note", textBox2.Text);
-            TEST_DB.Add_Param("@name", textBox1.Text);
-            if (checkBox1.Checked)
+            if (id == 0)
             {
-                TEST_DB.Add_Param("@holiday_visiable", 1);
+                string s = "insert into epoint(s_time,e_time,rday,note,name,holiday_visiable) value(@s_time,@e_time,@rday,@note,@name,@holiday_visiable)";
+                TEST_DB.Add_Param("@s_time", dateTimePicker1.Value);
+                TEST_DB.Add_Param("@e_time", dateTimePicker2.Value);
+                TEST_DB.Add_Param("@rday", rday);
+                TEST_DB.Add_Param("@note", textBox2.Text);
+                TEST_DB.Add_Param("@name", textBox1.Text);
+                if (checkBox1.Checked)
+                {
+                    TEST_DB.Add_Param("@holiday_visiable", 1);
+                }
+                else
+                {
+                    TEST_DB.Add_Param("@holiday_visiable", 0);
+                }
+                if (TEST_DB.ExecuteDML(s) > 0)
+                {
+                    MessageBox.Show("添加成功");
+                    DialogResult = DialogResult.OK;
+                }
+                else
+                {
+                    MessageBox.Show("添加失败");
+                }
             }
-            else
-            {
-                TEST_DB.Add_Param("@holiday_visiable", 0);
+            else {
+                string s = "UPDATE epoint set name = @name,note = @note,s_time=@s_time,e_time=@e_time,rday=@rday,holiday_visiable=@holiday_visiable WHERE id = @id";
+                TEST_DB.Add_Param("@name", textBox1.Text);
+                TEST_DB.Add_Param("@note", textBox2.Text);
+                TEST_DB.Add_Param("@id", id);
+                TEST_DB.Add_Param("@s_time", dateTimePicker1.Value);
+                TEST_DB.Add_Param("@e_time", dateTimePicker2.Value);
+                TEST_DB.Add_Param("@rday", rday);
+                if (checkBox1.Checked)
+                {
+                    TEST_DB.Add_Param("@holiday_visiable", 1);
+                }
+                else
+                {
+                    TEST_DB.Add_Param("@holiday_visiable", 0);
+                }
+                if (checkBox1.Checked)
+                {
+                    TEST_DB.Add_Param("@enablement", 1);
+                }
+                else
+                {
+                    TEST_DB.Add_Param("@enablement", 0);
+                }
+                if (TEST_DB.ExecuteDML(s) > 0)
+                {
+                    MessageBox.Show("修改成功");
+                    DialogResult = DialogResult.OK;
+                }
+                else
+                {
+                    MessageBox.Show("修改失败");
+                }
             }
-            if (TEST_DB.ExecuteDML(s) > 0)
-            {
-                MessageBox.Show("添加时控成功");
-                DialogResult = DialogResult.OK;
-            }
-            DialogResult = DialogResult.OK;
         }
         private void Repeat_day() {
             rday = checkBox3.Checked ? rday | 1 : rday & ~1;
@@ -115,6 +156,29 @@ namespace LightControl
         {
             dateTimePicker1.ShowUpDown = true;
             dateTimePicker2.ShowUpDown = true;
+            if (id > 0) {
+                string s = "select * from epoint where id = @id";
+                TEST_DB.Add_Param("@id", id);
+                DataTable dt = new DataTable();
+                TEST_DB.ExecuteSQL(s, dt);
+                if (dt.Rows.Count > 0)
+                {
+                    textBox1.Text = Convert.ToString(dt.Rows[0][5]);
+                    textBox2.Text = Convert.ToString(dt.Rows[0][4]);
+                    dateTimePicker1.Value = Convert.ToDateTime(dt.Rows[0][1]+"");
+                    dateTimePicker2.Value = Convert.ToDateTime(dt.Rows[0][2] + "");
+                    checkBox1.Checked = Convert.ToInt32(dt.Rows[0][6]) == 1 ? true : false;
+                    rday = Convert.ToInt32(dt.Rows[0][3]);
+                    checkBox3.Checked = (rday & 1) == 1 ? true : false;
+                    checkBox4.Checked = (rday & 2) == 2 ? true : false;
+                    checkBox5.Checked = (rday & 4) == 4 ? true : false;
+                    checkBox6.Checked = (rday & 8) == 8 ? true : false;
+                    checkBox7.Checked = (rday & 16) == 16 ? true : false;
+                    checkBox8.Checked = (rday & 32) == 32 ? true : false;
+                    checkBox9.Checked = (rday & 64) == 64 ? true : false;
+                    checkBox2.Checked = rday  == 127 ? true : false;
+                }
+            }
         }
     }
 }
