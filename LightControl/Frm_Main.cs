@@ -38,8 +38,8 @@ namespace LightControl
             //MessageBox.Show(see.getOneTagValue("test34") + "");
             // MessageBox.Show( DateTime.Compare(Convert.ToDateTime(st1), Convert.ToDateTime(st2))+"");
             // MessageBox.Show( Convert.ToInt32( DateTime.Now.DayOfWeek)+"");
-             Thread th = new Thread(new ThreadStart(ThreadMethod)); //创建线程                     
-              th.Start();
+            // Thread th = new Thread(new ThreadStart(ThreadMethod)); //创建线程                     
+            //  th.Start();
         }
         int stmcount = 100;
         int stncount = 0;
@@ -433,7 +433,6 @@ namespace LightControl
                 MessageBox.Show("删除失败");
             }
             dt.Dispose();
-
         }
 
         private void treeView1_MouseDown(object sender, MouseEventArgs e)
@@ -444,11 +443,11 @@ namespace LightControl
                 int x = e.X;
                 int y = e.Y;
                 TreeNode CurrentNode = treeView1.GetNodeAt(ClickPoint);
-
+               
                 if (CurrentNode is TreeNode)//判断你点的是不是一个节点
                 {
-
-                    if (CurrentNode.Level < 2)
+                    string s = CurrentNode.Name;
+                    if (s.IndexOf(".") ==0)//默认区域第一个字符为.
                     {
                         nodeName = CurrentNode.Text;
                         treeView1.SelectedNode = CurrentNode;
@@ -1359,6 +1358,11 @@ namespace LightControl
                     toolStripTextBox3.Text = loopPage.ToString();
                 }
             }
+        }
+
+        private void 添加区域ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
