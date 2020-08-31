@@ -18,6 +18,7 @@ namespace LightControl
         }
         DBConn.DB_SQL TEST_DB = com.TEST_DB;
         public string cnodeName;
+        int tagsCount = 0;
         public string nodeName
          {
              get { return textBox1.Text.Trim(); }
@@ -40,7 +41,7 @@ namespace LightControl
             }
             dt.Dispose();
             comboBox2.DataSource = list;
-            s = "select * from tags where tt_id = 1";
+            s = "select * from tags where tt_id = 1 and tags.id not in (select e.szd_tag from equipment e where e.szd_tag is not null)";
             dt = new DataTable();
             TEST_DB.ExecuteSQL(s, dt);
             comboBox1.DisplayMember = "Name";
@@ -53,6 +54,7 @@ namespace LightControl
                 li.Name = Convert.ToString(dt.Rows[i][1]);
                 list.Add(li);
             }
+            tagsCount = dt.Rows.Count;
             dt.Dispose();
             comboBox1.DataSource = list;
         }
@@ -66,13 +68,22 @@ namespace LightControl
         int parent_id=0;
         private void button1_Click(object sender, EventArgs e)//保存
         {
+
             if (string.IsNullOrEmpty(textBox1.Text.Trim()))
             {
                 MessageBox.Show("请填写节点名称！");
                 return;
             }
             else {
-                if (cnodeName != "根节点") {
+                if (textBox1.Text.Trim().EndsWith(".")) {
+                    MessageBox.Show("机器名称不能以句号结尾");
+                    return;
+                }
+                if (tagsCount == 0) {
+                    MessageBox.Show("每台机器必须有一个手自动标签点");
+                    return;
+                }
+                if (cnodeName != "根节点.") {
                     DataTable dt = new DataTable();
                    // MessageBox.Show(cnodeName);
                     TEST_DB.Add_Param("@name", cnodeName);
@@ -85,6 +96,7 @@ namespace LightControl
                 }
                 TEST_DB.Add_Param("@name", textBox1.Text.Trim());
                 TEST_DB.Add_Param("@et_id", this.comboBox2.SelectedValue);
+               
                 if (this.comboBox2.Text == "回路控制器")
                 {
                     TEST_DB.Add_Param("@szd_tag", this.comboBox1.SelectedValue);
@@ -92,6 +104,7 @@ namespace LightControl
                 else {
                     TEST_DB.Add_Param("@szd_tag",null);
                 }
+               
                 if (this.parent_id == 0)
                 {
                     TEST_DB.Add_Param("@parent_id", null);

@@ -66,6 +66,12 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="FrmAddRegion.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmAddRegion.Designer.cs">
+      <DependentUpon>FrmAddRegion.cs</DependentUpon>
+    </Compile>
     <Compile Include="Frm_addHoliday.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -131,6 +137,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmAddRegion.resx">
+      <DependentUpon>FrmAddRegion.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Frm_AddEquipment.resx">
       <DependentUpon>Frm_AddEquipment.cs</DependentUpon>

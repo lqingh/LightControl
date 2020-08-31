@@ -31,15 +31,18 @@ namespace LightControl
             name.Text = user;
             see = new isee();
             see.getIseeData();
-            //isee.getIseeData();
-            //  string st1 = "12:13";
-
-            // string st2 = "14:14";
-            //MessageBox.Show(see.getOneTagValue("test34") + "");
-            // MessageBox.Show( DateTime.Compare(Convert.ToDateTime(st1), Convert.ToDateTime(st2))+"");
-            // MessageBox.Show( Convert.ToInt32( DateTime.Now.DayOfWeek)+"");
-            // Thread th = new Thread(new ThreadStart(ThreadMethod)); //创建线程                     
-            //  th.Start();
+            Hashtable ht = new Hashtable();
+            if (!ht.ContainsKey("a")) {
+                ht.Add("a", 1);
+            }
+           
+           // ht.Add("a", 2);
+            MessageBox.Show(Convert.ToString( ht["a"]));
+            ht.Clear();
+            MessageBox.Show(Convert.ToString(ht.Count));
+         
+            Thread th = new Thread(new ThreadStart(ThreadMethod)); //创建线程                     
+              th.Start();
         }
         int stmcount = 100;
         int stncount = 0;
@@ -62,6 +65,7 @@ namespace LightControl
             int day = 0;
             Boolean isHoliday = false; //判断当前是否为节假日
             Hashtable ht = new Hashtable();
+            Hashtable ht1 = new Hashtable();
             DataTable dt,dt1;
             string s,s1;
             string szdtag;
@@ -169,12 +173,14 @@ namespace LightControl
                                 TEST_DB.ExecuteSQL(s, dt);
                                 for (i = 0; i < dt.Rows.Count; i++)
                                 {
-                                    
                                     szdtag = Convert.ToString(ht[Convert.ToString(dt.Rows[i][0])]);
                                     if (see.getOneTagValue(szdtag) == 1)//判断手自动状态,0为自动，1为手动
                                     {
-                                       
-                                        see.ModifyOneTag(Convert.ToString(dt.Rows[i][0]), 1);//1为开灯，0为关灯
+                                        if (!ht1.ContainsKey(Convert.ToString(dt.Rows[i][0])))
+                                        {
+                                            ht1.Add(Convert.ToString(dt.Rows[i][0]), 1);
+                                        }
+                                     //   see.ModifyOneTag(Convert.ToString(dt.Rows[i][0]), 1);//1为开灯，0为关灯
                                     }
                                 }
                                 dt.Dispose();
@@ -192,8 +198,7 @@ namespace LightControl
                                     szdtag = Convert.ToString(ht[Convert.ToString(dt.Rows[i][0])]);
                                    
                                     if (see.getOneTagValue(szdtag) == 1)//判断手自动状态,1为自动，0为手动
-                                    {
-                                        
+                                    {  
                                         TEST_DB.Add_Param("@name", Convert.ToString(dt.Rows[i][0]));
                                         dt1 = new DataTable();
                                         TEST_DB.ExecuteSQL(s1, dt1);
@@ -213,8 +218,12 @@ namespace LightControl
                                             }
                                         }
                                         if (tag ==0) {
+                                            if (!ht1.ContainsKey(Convert.ToString(dt.Rows[i][0])))
+                                            {
+                                                ht1.Add(Convert.ToString(dt.Rows[i][0]), 0);
+                                            }
                                             //MessageBox.Show("fg");
-                                            see.ModifyOneTag(Convert.ToString(dt.Rows[i][0]), 0);
+                                            //    see.ModifyOneTag(Convert.ToString(dt.Rows[i][0]), 0);
                                         }
                                         dt1.Dispose();
                                     }
@@ -224,8 +233,13 @@ namespace LightControl
                         }
                     }
                 }
+                foreach (string key in ht1.Keys)
+                {
+                    see.ModifyOneTag(key,Convert.ToInt32( ht[key]));        
+                }
+                ht1.Clear();
                 //MessageBox.Show("fg");
-                Thread.Sleep(60);//如果不延时，将占用CPU过高  
+                Thread.Sleep(60000);//如果不延时，将占用CPU过高  
             }
         }
         string strSql = "select t.id,t.name,t.note,e.`name` as eName,t.tt_id,tt.type  from tags t left join equipment e on t.equipment_id = e.id join tags_type tt on t.tt_id = tt.id limit @curPage,@pageSize";
@@ -361,7 +375,7 @@ namespace LightControl
             tabControl3.Visible = false;
         }
         string etop = "select name,id from equipment where parent_id is null";
-        string echild = "select name from equipment where parent_id = @parent_id";
+        string echild = "select name,id from equipment where parent_id = @parent_id";
         private void module_Click(object sender, EventArgs e)
         {
             int i = 0;
@@ -370,13 +384,17 @@ namespace LightControl
 
             panel5.Dock = DockStyle.Fill;
             treeView1.Nodes.Clear();
-            treeView1.Nodes.Add("根节点");
+            treeView1.Nodes.Add("根节点.");
             DataTable adt = new DataTable();
             DataTable dt = new DataTable();
+            DataTable dt1 = new DataTable();
+            DataTable dt2 = new DataTable();
             TEST_DB.ExecuteSQL(etop, adt);
             int parent_id = 1;
             int j = 0;
             int k = 0;
+            int k1 = 0;
+            int k2 = 0;
             for (i = 0; i < adt.Rows.Count; i++)
             {
                 treeView1.Nodes[0].Nodes.Add(adt.Rows[i][0] + "");
@@ -386,6 +404,22 @@ namespace LightControl
                 for (k = 0; k < dt.Rows.Count; k++)
                 {
                     treeView1.Nodes[0].Nodes[j].Nodes.Add(dt.Rows[k][0] + "");
+                    parent_id = Convert.ToInt32(dt.Rows[k][1]);
+                    TEST_DB.Add_Param("@parent_id", parent_id);
+                    TEST_DB.ExecuteSQL(echild, dt1);
+                    for (k1 = 0; k1 < dt1.Rows.Count; k1++)
+                    {
+                        treeView1.Nodes[0].Nodes[j].Nodes[k].Nodes.Add(dt1.Rows[k1][0] + "");
+                        parent_id = Convert.ToInt32(dt1.Rows[k1][1]);
+                        TEST_DB.Add_Param("@parent_id", parent_id);
+                        TEST_DB.ExecuteSQL(echild, dt2);
+                        for (k2 = 0; k2 < dt2.Rows.Count; k2++)
+                        {
+                            treeView1.Nodes[0].Nodes[j].Nodes[k].Nodes[k1].Nodes.Add(dt2.Rows[k2][0] + "");
+                        }
+                        dt2.Dispose();
+                    }
+                    dt1.Dispose();
                 }
                 j++;
                 dt.Dispose();
@@ -399,6 +433,7 @@ namespace LightControl
         {
             Frm_AddEquipment f5 = new Frm_AddEquipment();
             f5.cnodeName = nodeName;
+          
             if (f5.ShowDialog() == DialogResult.OK)
             {
                 treeView1.SelectedNode.Nodes.Add(f5.nodeName);
@@ -446,8 +481,9 @@ namespace LightControl
                
                 if (CurrentNode is TreeNode)//判断你点的是不是一个节点
                 {
-                    string s = CurrentNode.Name;
-                    if (s.IndexOf(".") ==0)//默认区域第一个字符为.
+                    string s = CurrentNode.Text;
+                   // MessageBox.Show(CurrentNode.Level+"");
+                    if (s.EndsWith(".")&&CurrentNode.Level< 4)//默认区域最后一个字符为.或者层次为4
                     {
                         nodeName = CurrentNode.Text;
                         treeView1.SelectedNode = CurrentNode;
@@ -457,9 +493,12 @@ namespace LightControl
                     else
                     {
                         // nodeName ="根节点";
+                        nodeName = CurrentNode.Text;
                         treeView1.SelectedNode = CurrentNode;
                         CurrentNode.ContextMenuStrip = this.contextMenuStrip1;
                         contextMenuStrip1.Show(MousePosition);
+                       
+                      
                     }
                     ///MessageBox.Show(Convert.ToString(CurrentNode.Level));
 
@@ -520,7 +559,6 @@ namespace LightControl
                 if (dt.Rows.Count > 0)
                 {
                     id = Convert.ToInt32(dt.Rows[0][0]);
-
                 }
                 dataGridView2.Rows.Add(id, name, temp[0], temp[1], temp[2], temp[3], temp[4], temp[5], temp[6], temp[7], "修改");
             }
@@ -536,7 +574,7 @@ namespace LightControl
             //  int y = e.Y;
             TreeNode CurrentNode = treeView1.GetNodeAt(ClickPoint);
           
-            if (CurrentNode.Level == 2)
+            if (!CurrentNode.Text.EndsWith("."))
             {
                 updateDataGridView2(CurrentNode.Text.Trim());
             }
@@ -640,6 +678,7 @@ namespace LightControl
             {
                 loopTootal = loopTootal + 1;
                 udgv3();
+                com.updateTime = true;
             }
         }
 
@@ -663,7 +702,7 @@ namespace LightControl
                     MessageBox.Show("删除成功");
                     loopTootal = loopTootal - 1;
                     udgv3();
-
+                    com.updateTime = true;
                 }
                 else
                 {
@@ -678,6 +717,7 @@ namespace LightControl
             if (ah.ShowDialog() == DialogResult.OK)
             {
                 udgv3();
+                com.updateTime = true;
             }
         }
         private void dataGridView3_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
@@ -834,6 +874,7 @@ namespace LightControl
             {
                 loopTootal = loopTootal + 1;
                 uscene();
+                com.updateTime = true;
             }
         }
 
@@ -883,7 +924,7 @@ namespace LightControl
             sdt.eName = name;
             if (sdt.ShowDialog() == DialogResult.OK)
             {
-
+                com.updateTime = true;
             }
         }
         private void loopScene(int id,string name) {
@@ -891,7 +932,7 @@ namespace LightControl
             ls.eId = id;
             ls.eName = name;
             if (ls.ShowDialog() == DialogResult.OK) {
-
+                com.updateTime = true;
             }
         }
         private void deleteScene(int id)
@@ -905,7 +946,7 @@ namespace LightControl
                     MessageBox.Show("删除成功");
                     loopTootal = loopTootal - 1;
                     uscene();
-
+                    com.updateTime = true;
                 }
                 else
                 {
@@ -920,6 +961,7 @@ namespace LightControl
             if (fas.ShowDialog() == DialogResult.OK)
             {
                 uscene();
+                com.updateTime = true;
             }
         }
 
@@ -966,6 +1008,7 @@ namespace LightControl
             if (at.ShowDialog() == DialogResult.OK) {
                 loopTootal = loopTootal + 1;
                 utime();
+                com.updateTime = true;
             }
         }
 
@@ -1211,6 +1254,7 @@ namespace LightControl
             fat.id = id;
             if (fat.ShowDialog()== DialogResult.OK) {
                 utime();
+                com.updateTime = true;
             }
         }
         private void deleteTime(int id)
@@ -1224,6 +1268,7 @@ namespace LightControl
                     MessageBox.Show("删除成功");
                     loopTootal = loopTootal - 1;
                     utime();
+                    com.updateTime = true;
 
                 }
                 else
@@ -1362,7 +1407,12 @@ namespace LightControl
 
         private void 添加区域ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            FrmAddRegion far = new FrmAddRegion();
+            far.name = nodeName;
+            if (far.ShowDialog() == DialogResult.OK)
+            {
+                treeView1.SelectedNode.Nodes.Add(far.name);
+            }
         }
     }
 }

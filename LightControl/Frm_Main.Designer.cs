@@ -425,10 +425,10 @@
             // 
             this.tabControl3.Controls.Add(this.tabPage3);
             this.tabControl3.Font = new System.Drawing.Font("黑体", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.tabControl3.Location = new System.Drawing.Point(882, 3);
+            this.tabControl3.Location = new System.Drawing.Point(26, 7);
             this.tabControl3.Name = "tabControl3";
             this.tabControl3.SelectedIndex = 0;
-            this.tabControl3.Size = new System.Drawing.Size(43, 87);
+            this.tabControl3.Size = new System.Drawing.Size(56, 118);
             this.tabControl3.TabIndex = 15;
             this.tabControl3.Visible = false;
             // 
@@ -442,7 +442,7 @@
             this.tabPage3.Location = new System.Drawing.Point(4, 25);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(35, 58);
+            this.tabPage3.Size = new System.Drawing.Size(48, 89);
             this.tabPage3.TabIndex = 0;
             this.tabPage3.Text = "时控设置";
             // 
@@ -451,9 +451,9 @@
             this.panel8.Controls.Add(this.button7);
             this.panel8.Controls.Add(this.bindingNavigator4);
             this.panel8.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel8.Location = new System.Drawing.Point(3, 13);
+            this.panel8.Location = new System.Drawing.Point(3, 44);
             this.panel8.Name = "panel8";
-            this.panel8.Size = new System.Drawing.Size(29, 42);
+            this.panel8.Size = new System.Drawing.Size(42, 42);
             this.panel8.TabIndex = 18;
             // 
             // button7
@@ -493,7 +493,7 @@
             this.bindingNavigator4.Name = "bindingNavigator4";
             this.bindingNavigator4.Padding = new System.Windows.Forms.Padding(0, 0, 1, 20);
             this.bindingNavigator4.PositionItem = null;
-            this.bindingNavigator4.Size = new System.Drawing.Size(29, 30);
+            this.bindingNavigator4.Size = new System.Drawing.Size(42, 30);
             this.bindingNavigator4.TabIndex = 20;
             this.bindingNavigator4.Text = "bindingNavigator4";
             // 
@@ -623,7 +623,7 @@
             this.dataGridView5.RowHeadersWidth = 60;
             this.dataGridView5.RowTemplate.Height = 23;
             this.dataGridView5.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView5.Size = new System.Drawing.Size(29, 52);
+            this.dataGridView5.Size = new System.Drawing.Size(42, 83);
             this.dataGridView5.TabIndex = 0;
             this.dataGridView5.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridView5_CellMouseClick);
             this.dataGridView5.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dataGridView5_CellPainting);
@@ -689,10 +689,10 @@
             // 
             this.tabControl2.Controls.Add(this.tabPage2);
             this.tabControl2.Font = new System.Drawing.Font("黑体", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.tabControl2.Location = new System.Drawing.Point(1003, 7);
+            this.tabControl2.Location = new System.Drawing.Point(188, 17);
             this.tabControl2.Name = "tabControl2";
             this.tabControl2.SelectedIndex = 0;
-            this.tabControl2.Size = new System.Drawing.Size(102, 79);
+            this.tabControl2.Size = new System.Drawing.Size(86, 98);
             this.tabControl2.TabIndex = 14;
             this.tabControl2.Visible = false;
             // 
@@ -706,7 +706,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 25);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(94, 50);
+            this.tabPage2.Size = new System.Drawing.Size(78, 69);
             this.tabPage2.TabIndex = 0;
             this.tabPage2.Text = "场景设置";
             // 
@@ -715,9 +715,9 @@
             this.panel7.Controls.Add(this.button4);
             this.panel7.Controls.Add(this.bindingNavigator3);
             this.panel7.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel7.Location = new System.Drawing.Point(3, 5);
+            this.panel7.Location = new System.Drawing.Point(3, 24);
             this.panel7.Name = "panel7";
-            this.panel7.Size = new System.Drawing.Size(88, 42);
+            this.panel7.Size = new System.Drawing.Size(72, 42);
             this.panel7.TabIndex = 18;
             // 
             // button4
@@ -757,7 +757,7 @@
             this.bindingNavigator3.Name = "bindingNavigator3";
             this.bindingNavigator3.Padding = new System.Windows.Forms.Padding(0, 0, 1, 20);
             this.bindingNavigator3.PositionItem = null;
-            this.bindingNavigator3.Size = new System.Drawing.Size(88, 30);
+            this.bindingNavigator3.Size = new System.Drawing.Size(72, 30);
             this.bindingNavigator3.TabIndex = 20;
             this.bindingNavigator3.Text = "bindingNavigator3";
             // 
@@ -886,7 +886,7 @@
             this.dataGridView4.RowHeadersWidth = 60;
             this.dataGridView4.RowTemplate.Height = 23;
             this.dataGridView4.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView4.Size = new System.Drawing.Size(88, 44);
+            this.dataGridView4.Size = new System.Drawing.Size(72, 63);
             this.dataGridView4.TabIndex = 0;
             this.dataGridView4.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridView4_CellMouseClick);
             this.dataGridView4.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dataGridView4_CellPainting);
@@ -944,10 +944,10 @@
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Font = new System.Drawing.Font("黑体", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.tabControl1.Location = new System.Drawing.Point(931, 10);
+            this.tabControl1.Location = new System.Drawing.Point(88, 17);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(66, 79);
+            this.tabControl1.Size = new System.Drawing.Size(98, 71);
             this.tabControl1.TabIndex = 13;
             this.tabControl1.Visible = false;
             // 
@@ -961,7 +961,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 25);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(58, 50);
+            this.tabPage1.Size = new System.Drawing.Size(90, 42);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "节假日设置";
             // 
@@ -970,9 +970,9 @@
             this.panel6.Controls.Add(this.button6);
             this.panel6.Controls.Add(this.bindingNavigator2);
             this.panel6.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel6.Location = new System.Drawing.Point(3, 5);
+            this.panel6.Location = new System.Drawing.Point(3, -3);
             this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(52, 42);
+            this.panel6.Size = new System.Drawing.Size(84, 42);
             this.panel6.TabIndex = 18;
             // 
             // button6
@@ -1012,7 +1012,7 @@
             this.bindingNavigator2.Name = "bindingNavigator2";
             this.bindingNavigator2.Padding = new System.Windows.Forms.Padding(0, 0, 1, 20);
             this.bindingNavigator2.PositionItem = null;
-            this.bindingNavigator2.Size = new System.Drawing.Size(52, 30);
+            this.bindingNavigator2.Size = new System.Drawing.Size(84, 30);
             this.bindingNavigator2.TabIndex = 20;
             this.bindingNavigator2.Text = "bindingNavigator2";
             // 
@@ -1141,7 +1141,7 @@
             this.dataGridView3.RowHeadersWidth = 60;
             this.dataGridView3.RowTemplate.Height = 23;
             this.dataGridView3.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView3.Size = new System.Drawing.Size(52, 44);
+            this.dataGridView3.Size = new System.Drawing.Size(84, 36);
             this.dataGridView3.TabIndex = 0;
             this.dataGridView3.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridView3_CellMouseClick);
             this.dataGridView3.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dataGridView3_CellPainting);
@@ -1314,10 +1314,10 @@
             // 
             this.tabControl11.Controls.Add(this.tabPage28);
             this.tabControl11.Font = new System.Drawing.Font("黑体", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.tabControl11.Location = new System.Drawing.Point(1111, 17);
+            this.tabControl11.Location = new System.Drawing.Point(298, 17);
             this.tabControl11.Name = "tabControl11";
             this.tabControl11.SelectedIndex = 0;
-            this.tabControl11.Size = new System.Drawing.Size(93, 69);
+            this.tabControl11.Size = new System.Drawing.Size(819, 117);
             this.tabControl11.TabIndex = 11;
             this.tabControl11.Visible = false;
             // 
@@ -1331,7 +1331,7 @@
             this.tabPage28.Location = new System.Drawing.Point(4, 25);
             this.tabPage28.Name = "tabPage28";
             this.tabPage28.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage28.Size = new System.Drawing.Size(85, 40);
+            this.tabPage28.Size = new System.Drawing.Size(811, 88);
             this.tabPage28.TabIndex = 0;
             this.tabPage28.Text = "回路设置";
             // 
@@ -1343,9 +1343,9 @@
             this.panel9.Controls.Add(this.textBox1);
             this.panel9.Controls.Add(this.bindingNavigator1);
             this.panel9.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel9.Location = new System.Drawing.Point(3, -5);
+            this.panel9.Location = new System.Drawing.Point(3, 43);
             this.panel9.Name = "panel9";
-            this.panel9.Size = new System.Drawing.Size(79, 42);
+            this.panel9.Size = new System.Drawing.Size(805, 42);
             this.panel9.TabIndex = 18;
             // 
             // button1
@@ -1357,6 +1357,7 @@
             this.button1.TabIndex = 21;
             this.button1.Text = "导入回路";
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Visible = false;
             // 
             // button5
             // 
@@ -1381,6 +1382,7 @@
             this.comboBox2.Size = new System.Drawing.Size(142, 24);
             this.comboBox2.TabIndex = 15;
             this.comboBox2.Text = "全部";
+            this.comboBox2.Visible = false;
             // 
             // textBox1
             // 
@@ -1390,6 +1392,8 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(188, 24);
             this.textBox1.TabIndex = 7;
+            this.textBox1.Visible = false;
+            this.textBox1.WordWrap = false;
             // 
             // bindingNavigator1
             // 
@@ -1417,7 +1421,7 @@
             this.bindingNavigator1.Name = "bindingNavigator1";
             this.bindingNavigator1.Padding = new System.Windows.Forms.Padding(0, 0, 1, 20);
             this.bindingNavigator1.PositionItem = null;
-            this.bindingNavigator1.Size = new System.Drawing.Size(79, 30);
+            this.bindingNavigator1.Size = new System.Drawing.Size(805, 30);
             this.bindingNavigator1.TabIndex = 20;
             this.bindingNavigator1.Text = "bindingNavigator1";
             // 
@@ -1549,7 +1553,7 @@
             this.dataGridView1.RowHeadersWidth = 60;
             this.dataGridView1.RowTemplate.Height = 23;
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView1.Size = new System.Drawing.Size(79, 34);
+            this.dataGridView1.Size = new System.Drawing.Size(805, 82);
             this.dataGridView1.TabIndex = 0;
             this.dataGridView1.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridView1_CellMouseClick);
             this.dataGridView1.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dataGridView1_CellPainting);
