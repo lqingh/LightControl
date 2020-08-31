@@ -91,6 +91,7 @@
             this.Controls.Add(this.panel1);
             this.Name = "FrmAddRegion";
             this.Text = "FrmAddRegion";
+            this.Load += new System.EventHandler(this.FrmAddRegion_Load);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.ResumeLayout(false);

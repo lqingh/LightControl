@@ -69,5 +69,10 @@ namespace LightControl
             }
             
         }
+
+        private void FrmAddRegion_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

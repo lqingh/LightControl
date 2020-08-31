@@ -19,6 +19,7 @@ namespace LightControl
         int TootalPageNum = 0;  // 用来记录在"用户"中当前所在的页码数
         int onePageRowNum = 15;     // 设置一页显示的行数
         string nodeName = "";
+        int sTime = 100;//回路反馈时间
         isee see;
         DBConn.DB_SQL TEST_DB = com.TEST_DB;
         public Frm_Main()
@@ -31,15 +32,7 @@ namespace LightControl
             name.Text = user;
             see = new isee();
             see.getIseeData();
-            Hashtable ht = new Hashtable();
-            if (!ht.ContainsKey("a")) {
-                ht.Add("a", 1);
-            }
-           
-           // ht.Add("a", 2);
-            MessageBox.Show(Convert.ToString( ht["a"]));
-            ht.Clear();
-            MessageBox.Show(Convert.ToString(ht.Count));
+          
          
             Thread th = new Thread(new ThreadStart(ThreadMethod)); //创建线程                     
               th.Start();
@@ -180,6 +173,9 @@ namespace LightControl
                                         {
                                             ht1.Add(Convert.ToString(dt.Rows[i][0]), 1);
                                         }
+                                        else {
+                                            ht1[Convert.ToString(dt.Rows[i][0])] = 1;
+                                        }
                                      //   see.ModifyOneTag(Convert.ToString(dt.Rows[i][0]), 1);//1为开灯，0为关灯
                                     }
                                 }
@@ -222,6 +218,10 @@ namespace LightControl
                                             {
                                                 ht1.Add(Convert.ToString(dt.Rows[i][0]), 0);
                                             }
+                                            else
+                                            {
+                                                ht1[Convert.ToString(dt.Rows[i][0])] = 0;
+                                            }
                                             //MessageBox.Show("fg");
                                             //    see.ModifyOneTag(Convert.ToString(dt.Rows[i][0]), 0);
                                         }
@@ -235,7 +235,7 @@ namespace LightControl
                 }
                 foreach (string key in ht1.Keys)
                 {
-                    see.ModifyOneTag(key,Convert.ToInt32( ht[key]));        
+                    see.ModifyOneTag(key,Convert.ToInt32( ht1[key]));        
                 }
                 ht1.Clear();
                 //MessageBox.Show("fg");
@@ -1113,7 +1113,7 @@ namespace LightControl
                     if (rectDel.Contains(curPosition))//删除
                         deleteTag(Convert.ToInt32(dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString()));
                     else if (rectMod.Contains(curPosition))//修改
-                        editScene(Convert.ToInt32(dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString()));
+                        editTag(Convert.ToInt32(dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString()));
                     else if (rectDS.Contains(curPosition)) {
                         if (Convert.ToInt32(this.dataGridView1.Rows[e.RowIndex].Cells[7].Value) ==2)
                         {
@@ -1127,13 +1127,20 @@ namespace LightControl
                 }
             }
         }
+        public void editTag(int id) {
+            Frm_Addloop_Manual fam = new Frm_Addloop_Manual();
+            fam.id = id;
+            if (fam.ShowDialog()==DialogResult.OK) {
+                uregion();
+            }
+        }
         private string cTag(string tagName, string  name) {
             string s,temp;
             temp = name;
             if (MessageBox.Show("您确定更改"+ name + "状态吗？", "提示", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                     DataTable dt = new DataTable();
-                    s = "select t1.`name` from tags t join equipment e on t.equipment_id = e.id join tags t1 on e.szd_tag = t1.id where t.name= @name";
+                    s = "select t1.`name`,t.name as fb_name  from tags t join equipment e on t.equipment_id = e.id join tags t1 on e.szd_tag = t1.id where t.name= @name";
                     TEST_DB.Add_Param("@name", tagName);
                     TEST_DB.ExecuteSQL(s, dt);
                     if (dt.Rows.Count > 0)
@@ -1144,15 +1151,37 @@ namespace LightControl
                             dt.Dispose();
                             return name;
                         }
-                        if (name == "开启")
+                         dt.Dispose();
+                      
+                       if (name == "开启")
                         {  
                             see.ModifyOneTag(tagName, 0);//关闭
-                            temp = "关闭";
+                           Thread.Sleep(sTime);
+                            if (see.getOneTagValue(Convert.ToString(dt.Rows[0][0])) == 0)
+                            {
+                                MessageBox.Show("关闭成功");
+                                  temp = "关闭";
+                            }
+                            else {
+                                MessageBox.Show("关闭失败");
+                              temp = "开启";
+                              }
+                          
                         }
                         else
                         {
                             see.ModifyOneTag(tagName, 1);
-                            temp = "开启";
+                            Thread.Sleep(sTime);
+                            if (see.getOneTagValue(Convert.ToString(dt.Rows[0][0])) == 1)
+                            {
+                                MessageBox.Show("开启成功");
+                                temp = "开启";
+                            }
+                            else {
+                               MessageBox.Show("开启失败");
+                               temp = "关闭";
+                            }
+                           
                         }
                     }
                     else {
