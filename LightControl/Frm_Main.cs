@@ -32,8 +32,16 @@ namespace LightControl
             name.Text = user;
             see = new isee();
             see.getIseeData();
-          
-         
+            TootalPageNum = 0;
+            onePageRowNum = 15;
+            string s = "select count(*) from tags";
+            DataTable dt = new DataTable();
+            TEST_DB.ExecuteSQL(s, dt);
+            loopTootal = Convert.ToInt32(dt.Rows[0][0]);
+
+            dt.Dispose();
+            uregion();
+
             Thread th = new Thread(new ThreadStart(ThreadMethod)); //创建线程                     
               th.Start();
         }
@@ -450,7 +458,6 @@ namespace LightControl
             if (dt.Rows.Count > 0)
             {
                 int id = Convert.ToInt32(dt.Rows[0][0]);
-
                 TEST_DB.Add_Param("@id", id);
                 TEST_DB.Add_Param("@parent_id", id);
                 if (TEST_DB.ExecuteDML(dae) > 0)
